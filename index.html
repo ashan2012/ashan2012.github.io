@@ -1715,7 +1715,7 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
 <pre><code>1.数据准备（又名特征工程）：数据准备一般指从开始抓取数据到将数据转化为合适的形式进入我们所做的模型这个阶段的工作
 </code></pre><p>要想做好数据挖掘的工作，必须在数据准备阶段给予足够的重视。此次博客将会详细的介绍数据准备的各个方面，但是由于博主经验有限不可能将方方面卖弄全都写到，只能抛砖引玉，希望看到博文的各个前辈高人提出宝贵的意见。</p>
 <p>我们结合一个特征工程的整体框架图来看，更加容易理解</p>
-<p><img src="http://superashan.github.io/images/20151214150719_chactor.jpg" alt="特征工程整体框架"></p>
+<p><img src="http://ashan2012.github.io/images/20151214150719_chactor.jpg" alt="特征工程整体框架"></p>
 <p>##特征使用方案<br>首先获取特征，主要对于因变量有影响的特征都应该列入此范畴。所谓因变量就是结果，如分类结果，预测结果等。以文本分类为例，那词语，文本的长度，或者文本之中含有的特别的信息均可作为文本的特征。博主做过网站的分类，主要用到了网站的首页信息和首页中的图片的个数，链接的个数，文本长度等等均可作为特征。</p>
 <p>其次是可用性评估，可用性评估主要是考虑几个方面，首先获得某个特征的难度，如对于网站而言，获得网站的ip，title，keyword等可以通过直接的网页分析就可获得，但是对于网站拥有的页面数，以及每个页面的相关特征就需要一定的成本。然后是特征的覆盖率。特征的覆盖率计算一般有两个作用，一个是特征选择，通过覆盖率的计算判断这个特征能否作为模型的输入参数，还有就是通过特征的覆盖率监控发现故障，如某个特征的覆盖率出现异常波动，那肯定是数据源到特征流程出现问题。最后是对数据的准确率的特征的评估。由于每个特征是通过程序自动生成，而且往往是通过少量的训练集的计算得出，则肯定不能考虑所有的情况。如网页分类中，提取网页的关键字等，大多数网页会遵循一定的规则，通过html分析得到，但是还是会有部分网站网页结构并不一样，这样在我们提取的时候的出现错误，直接影响了特征的生成。</p>
 <p>##特征获取方案<br>知道了要用哪些特征，如何得到这些特征是一个问题。一般得到特征对于网页，就是爬虫爬取，页面解析等，如资源较大，可采用分布式爬虫，如nutch，scrapy等框架，也可以自己写爬虫框架，根据需求来。至于如何存储，简单一点就是文件就可，当然做成mysql，mongodb或者直接在Hadoop上计算，博主一般通过Hadoop计算文件交互就可满足大部分需求</p>
@@ -2024,7 +2024,7 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">Kategorien</span>
                 
               </div>
@@ -2035,7 +2035,7 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">Tags</span>
                 
               </div>
