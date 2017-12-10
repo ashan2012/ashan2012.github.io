@@ -338,7 +338,7 @@
 </blockquote>
 <p>网上有一个源码，用起来挺方便,叫TextRank4zh。看起来挺简单就看了一遍。<br>Textrank下面有四个文件:Segmentation.py主要用于切词和切句子，TextRAnk4Keyword.py主要用于提取关键词，TextRank4Sentence.py主要抽取关键的句子。util.py主要是关键词和句子排序。</p>
 <p>先看提取关键词:<br>TextRank4Keyword<br><strong>init</strong>.初始化.可以在stopword.txt中添加停止词<br>进入主函数analyze中，传入参数包括要进行提取的原文，关键词边的窗口大小，是够都变为小写,节点的类型选项（影响分词结果),边的类型，pagerank的参数。</p>
-<p>首先分词result = self.seg.segment(text=text, lower=lower).分词函数在Segmentation中.Segmentation初始化两个级别的分词项,WordSegmentation,SentenceSegmentation,词级别和句子级别。句子通过util.delimiters直接切割，然后词语切割直接调用结巴分词，具体结巴分词介绍可以参照:<a href="https://superashan.github.io/blog/2016/06/15/jieba%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB.html" title="源码阅读之jieba分词" target="_blank" rel="noopener">源码阅读之结巴分词</a>。<br>分词的时候通过allow_speech_tags控制生成词语的词性，返回的结果为dict，嵌套三层结构。第一层为选项，主要是是否使用停用词，和是否使用词性过滤两种，第二层对应句子，每个句子为word_list.</p>
+<p>首先分词result = self.seg.segment(text=text, lower=lower).分词函数在Segmentation中.Segmentation初始化两个级别的分词项,WordSegmentation,SentenceSegmentation,词级别和句子级别。句子通过util.delimiters直接切割，然后词语切割直接调用结巴分词，具体结巴分词介绍可以参照:<a href="https://ashan2012.github.io/blog/2016/06/15/jieba%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB.html" title="源码阅读之jieba分词" target="_blank" rel="noopener">源码阅读之结巴分词</a>。<br>分词的时候通过allow_speech_tags控制生成词语的词性，返回的结果为dict，嵌套三层结构。第一层为选项，主要是是否使用停用词，和是否使用词性过滤两种，第二层对应句子，每个句子为word_list.</p>
 <p>分词之后就进行图的构造，图构造然后排序函数为:util.sort_words.进入util.py文件中，sort_words函数中，首先是构造图:</p>
 <pre><code>for word_list in _vertex_source:
     for word in word_list:
@@ -545,7 +545,7 @@ scores = nx.pagerank(nx_graph, **pagerank_config)
         
           
             <p>##猜你喜欢</p>
-<p>推荐语料为搜索query，目标为提升搜索量，提升用户搜索体验，分解一下为推出的query为相关和惊喜度，+热门<br>整体方案如下：<br><img src="http://superashan.github.io/images/guesswantquery/structure.png" alt="猜你喜欢数据流程图"></p>
+<p>推荐语料为搜索query，目标为提升搜索量，提升用户搜索体验，分解一下为推出的query为相关和惊喜度，+热门<br>整体方案如下：<br><img src="http://ashan2012.github.io/images/guesswantquery/structure.png" alt="猜你喜欢数据流程图"></p>
 <h2 id="召回阶段"><a href="#召回阶段" class="headerlink" title="###召回阶段"></a>###召回阶段</h2><p><strong>1. 种子集合</strong></p>
 <ul>
 <li>搜索的query，按照搜索的频度可以分为经常搜索的和最近搜索的query</li>
@@ -993,9 +993,9 @@ void CreateBinaryTree() {
 </code></pre><p>``</p>
 <p>训练<br>l1 ns中表示word在sys1neg中的起始位置，主要用来获取负样本的vector<br>l2 cbow表示syn1中的非叶子节点的位置,主要用来获取非叶子节点的vector<br>taget ns中当前词语<br>label ns中当前词语的label,<br>neu1  隐藏层的vector<br>nuu1e 误差累积项</p>
 <p>两个模型cbow和skip-<br>具体的推理过程可以看<a href="http://blog.csdn.net/itplus/article/details/37969979" title="csdn 基于hs的模型" target="_blank" rel="noopener">csdn 基于hs的模型</a><br>其中cbow的模型结构如如下文:</p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow.png" alt="cbow结构图"></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow.png" alt="cbow结构图"></p>
 <p>cbow更新的伪代码如下:</p>
-<p><img src="http://superashan.github.io/images/word2vector/cbowliucheng.png" alt="cbow的更新伪码"></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbowliucheng.png" alt="cbow的更新伪码"></p>
 <p>看一下使用hs的cbow模型:</p>
 <pre><code>if (cbow) {  //train the cbow architecture
   // in -&gt; hidden
@@ -1060,15 +1060,15 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
   for (c = 0; c &lt; layer1_size; c++) syn1neg[c + l2] += g * neu1[c];
 }   
 </code></pre><p>附录，推导过程：<br>负抽样方法模型推导见:<br><a href="http://blog.csdn.net/itplus/article/details/37998797" target="_blank" rel="noopener">word2vector中的负抽样</a><br>大致思路为条件为上下文，正确的词语概率大，随机负抽样的概率小</p>
-<p><img src="http://superashan.github.io/images/word2vector/negtive1.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/negtive2.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/negtive3.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/negtive4.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/negtive1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/negtive2.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/negtive3.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/negtive4.png" alt=""></p>
 <p>cbow的推导过程:</p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow_1.png" alt=""></p>
 <p>写在结尾，以上推导过程来自<br><a href="http://my.csdn.net/peghoty" title="csdn 皮果提博客" target="_blank" rel="noopener">csdn 皮果提博客</a></p>
 <p>结尾十问：<strong><em>每次写完一个模型或者一个算法都要有问题</em></strong></p>
 <ol>
@@ -1230,14 +1230,14 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
         
           
             <p><em>在知乎上看到一个讲最小二乘法的，感觉说的非常清楚，提炼一下</em></p>
-<p>先从线性模型说起，输入变量为<img src="http://superashan.github.io/images/zxec/1.png" alt="输入变量">,线性模型为:<br><img src="http://superashan.github.io/images/zxec/2.png" alt="线性模型">，其中w为权重系数，最小二乘法法通过最小化预测值和真实值差值的平方和，即</p>
-<p><img src="http://superashan.github.io/images/zxec/3.png" alt="线性模型"></p>
-<p>函数为凸函数，所以可以求导获得解:<br><img src="http://superashan.github.io/images/zxec/4.png" alt="线性模型"><br>解为:<br><img src="http://superashan.github.io/images/zxec/5.png" alt="线性模型"></p>
+<p>先从线性模型说起，输入变量为<img src="http://ashan2012.github.io/images/zxec/1.png" alt="输入变量">,线性模型为:<br><img src="http://ashan2012.github.io/images/zxec/2.png" alt="线性模型">，其中w为权重系数，最小二乘法法通过最小化预测值和真实值差值的平方和，即</p>
+<p><img src="http://ashan2012.github.io/images/zxec/3.png" alt="线性模型"></p>
+<p>函数为凸函数，所以可以求导获得解:<br><img src="http://ashan2012.github.io/images/zxec/4.png" alt="线性模型"><br>解为:<br><img src="http://ashan2012.github.io/images/zxec/5.png" alt="线性模型"></p>
 <p>也可以从最大似然估计来理解最小二乘法：<br>假设误差服从高斯分布，即</p>
-<p><img src="http://superashan.github.io/images/zxec/6.png" alt="线性模型"></p>
+<p><img src="http://ashan2012.github.io/images/zxec/6.png" alt="线性模型"></p>
 <p>则误差的最大似然估计为:</p>
-<p><img src="http://superashan.github.io/images/zxec/6.png" alt="线性模型"></p>
-<p>最大化似然估计，相同于最小化<img src="http://superashan.github.io/images/zxec/6.png" alt="线性模型">.正好为最小二乘法的优化目标。</p>
+<p><img src="http://ashan2012.github.io/images/zxec/6.png" alt="线性模型"></p>
+<p>最大化似然估计，相同于最小化<img src="http://ashan2012.github.io/images/zxec/6.png" alt="线性模型">.正好为最小二乘法的优化目标。</p>
 <p>因此，我们说在误差服从高斯分布的情况下，最小二乘法相当于最大思然估计</p>
 
           
@@ -1393,7 +1393,7 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">def __cut_DAG(self, sentence):</span><br><span class="line">    DAG = self.get_DAG(sentence)</span><br><span class="line">    route = &#123;&#125;</span><br><span class="line">    self.calc(sentence, DAG, route)</span><br><span class="line">    x = 0</span><br><span class="line">    buf = &apos;&apos;</span><br><span class="line">    N = len(sentence)</span><br><span class="line">    while x &lt; N:</span><br><span class="line">        y = route[x][1] + 1</span><br><span class="line">        l_word = sentence[x:y]</span><br><span class="line">        if y - x == 1:</span><br><span class="line">            buf += l_word     #单个字连续会连在一起用HMM分词</span><br><span class="line">        else:</span><br><span class="line">            if buf:</span><br><span class="line">                if len(buf) == 1:   #如果下一个是词语，那上一个字就是单个字输出</span><br><span class="line">                    yield buf</span><br><span class="line">                    buf = &apos;&apos;</span><br><span class="line">                else:</span><br><span class="line">                    if not self.FREQ.get(buf):          #连续字在词典中找不到，HMM</span><br><span class="line">                        recognized = finalseg.cut(buf) </span><br><span class="line">                        for t in recognized:</span><br><span class="line">                            yield t</span><br><span class="line">                    else:                            #连续字在词典中找到了，输出</span><br><span class="line">                        for elem in buf:</span><br><span class="line">                            yield elem</span><br><span class="line">                    buf = &apos;&apos;</span><br><span class="line">            yield l_word</span><br><span class="line">        x = y</span><br><span class="line">    if buf:</span><br><span class="line">        if len(buf) == 1:</span><br><span class="line">            yield buf</span><br><span class="line">        elif not self.FREQ.get(buf):</span><br><span class="line">            recognized = finalseg.cut(buf)</span><br><span class="line">            for t in recognized:</span><br><span class="line">                yield t</span><br><span class="line">        else:</span><br><span class="line">            for elem in buf:</span><br><span class="line">                yield elem</span><br></pre></td></tr></table></figure>
 <p>其中新词的识别通过HMM实现，对要识别的字符串作为观测序列，状态集合包括(B,M,E,S)，分别对应开始，中间，结束，单字四个状态，在finalseg文件夹有线下算好的HMM模型，prob_start.py对应初始概率，prob_trans.py对应于状态转移矩阵，prob_emit.py对应观测概率。最大概率的状态序列对应为HMM的解码问题，解码使用维特比算法。就是前向算法将加变为max。</p>
 <p>HMM函数位于finalseg文件夹下面，在<strong>init</strong>.py，如基于函数为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">def __cut(sentence):</span><br><span class="line">    global emit_P</span><br><span class="line">    prob, pos_list = viterbi(sentence, &apos;BMES&apos;, start_P, trans_P, emit_P)</span><br><span class="line">    begin, nexti = 0, 0</span><br><span class="line">    # print pos_list, sentence</span><br><span class="line">    for i, char in enumerate(sentence):</span><br><span class="line">        pos = pos_list[i]</span><br><span class="line">        if pos == &apos;B&apos;:</span><br><span class="line">            begin = i </span><br><span class="line">        elif pos == &apos;E&apos;:</span><br><span class="line">            yield sentence[begin:i + 1]</span><br><span class="line">            nexti = i + 1 </span><br><span class="line">        elif pos == &apos;S&apos;:</span><br><span class="line">            yield char</span><br><span class="line">            nexti = i + 1 </span><br><span class="line">    if nexti &lt; len(sentence):</span><br><span class="line">        yield sentence[nexti:]</span><br></pre></td></tr></table></figure></p>
-<p>viterbi输出标注的BMSE状态序列，按照状态序列可知分词结果:<br>维特比算法流程如下:<br><img src="http://superashan.github.io/images/jieba/vterbi_01.png" alt="维特比算法流程图"></p>
+<p>viterbi输出标注的BMSE状态序列，按照状态序列可知分词结果:<br>维特比算法流程如下:<br><img src="http://ashan2012.github.io/images/jieba/vterbi_01.png" alt="维特比算法流程图"></p>
 <p>具体的代码中如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">def viterbi(obs, states, start_p, trans_p, emit_p):</span><br><span class="line">    V = [&#123;&#125;]  # tabular</span><br><span class="line">    path = &#123;&#125;</span><br><span class="line">    for y in states:  # init   #开始的状态</span><br><span class="line">        V[0][y] = start_p[y] + emit_p[y].get(obs[0], MIN_FLOAT)  #V存储每个时间节                    </span><br><span class="line">                                                                #点，每个状态的概率</span><br><span class="line">        path[y] = [y]      #path存储以y状态结束的最大概率状态序列</span><br><span class="line">    for t in xrange(1, len(obs)):</span><br><span class="line">        V.append(&#123;&#125;)</span><br><span class="line">        newpath = &#123;&#125;</span><br><span class="line">        for y in states:</span><br><span class="line">            em_p = emit_p[y].get(obs[t], MIN_FLOAT)</span><br><span class="line">            (prob, state) = max(</span><br><span class="line">                [(V[t - 1][y0] + trans_p[y0].get(y, MIN_FLOAT) + em_p, y0) for y0 in PrevStatus[y]])</span><br><span class="line">            V[t][y] = prob</span><br><span class="line">            newpath[y] = path[state] + [y] </span><br><span class="line">        path = newpath</span><br><span class="line"></span><br><span class="line">    (prob, state) = max((V[len(obs) - 1][y], y) for y in &apos;ES&apos;)</span><br><span class="line"></span><br><span class="line">    return (prob, path[state])</span><br></pre></td></tr></table></figure>
 <p>到此为止，结巴分词的原理已经讲完！</p>
@@ -1543,32 +1543,32 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
 <p>逻辑函数的定义如下：$$F(wx)=\frac{1}{1+{e^{-wx}}}$$</p>
 <p>在逻辑回归问题里用逻辑函数表示样本被判定为正样本的概率，即P(y=+1|x)=F(wx)，则相应的判断负样本的概率为1-P(y=+1|x)。由此可知对新样本分类的问题归结为比较上述两个概率的大小。对于概率函数进行极大似然估计。依据引入的逻辑函数进行极大似然估计的步骤详见图片推导过程。 </p>
 <p>逻辑分布理解为限制条件下的最大熵模型：<br>具体推导课件<a href="http://blog.csdn.net/dp_bupt/article/details/50568392" target="_blank" rel="noopener">csdn博客</a><br><a href="http://www.win-vector.com/dfi/LogisticRegressionMaxEnt.pdf" target="_blank" rel="noopener">推导pdf</a></p>
-<p>逻辑回归要达到的目的如下：<br><img src="http://superashan.github.io/images/lr/lr_maxentroy.png" alt="逻辑回归的目标"><br>有目标函数推到出的函数分布放好为最大熵分布，也是逻辑回归的模型一般化:</p>
-<p><img src="http://superashan.github.io/images/lr/maxentroy2.png" alt="逻辑回归模型一般化"></p>
+<p>逻辑回归要达到的目的如下：<br><img src="http://ashan2012.github.io/images/lr/lr_maxentroy.png" alt="逻辑回归的目标"><br>有目标函数推到出的函数分布放好为最大熵分布，也是逻辑回归的模型一般化:</p>
+<p><img src="http://ashan2012.github.io/images/lr/maxentroy2.png" alt="逻辑回归模型一般化"></p>
 <p>具体介绍如下：</p>
-<p><img src="http://superashan.github.io/images/lr/lr-1.png" alt="逻辑回归1"></p>
-<p><img src="http://superashan.github.io/images/lr/lr-2.png" alt="逻辑回归2"></p>
+<p><img src="http://ashan2012.github.io/images/lr/lr-1.png" alt="逻辑回归1"></p>
+<p><img src="http://ashan2012.github.io/images/lr/lr-2.png" alt="逻辑回归2"></p>
 <p>BLFG有海森矩阵转换为海森矩阵的逆过程如下:</p>
-<p><img src="http://superashan.github.io/images/lr/sherman_morrision_1.png" alt="sherman_morrision_1"></p>
-<p><img src="http://superashan.github.io/images/lr/sherman_morrision_2.png" alt="sherman_morrision_2"></p>
+<p><img src="http://ashan2012.github.io/images/lr/sherman_morrision_1.png" alt="sherman_morrision_1"></p>
+<p><img src="http://ashan2012.github.io/images/lr/sherman_morrision_2.png" alt="sherman_morrision_2"></p>
 <p>线下训练的常用的算法BFGS算法如下:</p>
-<p><img src="http://superashan.github.io/images/lr/LBFGS_1.png" alt="BLFGS1"></p>
-<p><img src="http://superashan.github.io/images/lr/LBFGS_2.png" alt="BLFGS2"></p>
-<p><img src="http://superashan.github.io/images/lr/LBFGS_3.png" alt="BLFGS3"></p>
-<p><img src="http://superashan.github.io/images/lr/LBFGS_4.png" alt="BLFGS4"></p>
-<p><img src="http://superashan.github.io/images/lr/LBFGS_5.png" alt="BLFGS5"></p>
+<p><img src="http://ashan2012.github.io/images/lr/LBFGS_1.png" alt="BLFGS1"></p>
+<p><img src="http://ashan2012.github.io/images/lr/LBFGS_2.png" alt="BLFGS2"></p>
+<p><img src="http://ashan2012.github.io/images/lr/LBFGS_3.png" alt="BLFGS3"></p>
+<p><img src="http://ashan2012.github.io/images/lr/LBFGS_4.png" alt="BLFGS4"></p>
+<p><img src="http://ashan2012.github.io/images/lr/LBFGS_5.png" alt="BLFGS5"></p>
 <p>补充LR1规则下训练算法OWL-QN:</p>
-<p><img src="http://superashan.github.io/images/lr/own-qn-1.png" alt="own-qn-1"></p>
-<p><img src="http://superashan.github.io/images/lr/own-qn-2.png" alt="own-qn-2"></p>
-<p><img src="http://superashan.github.io/images/lr/own-qn-3.png" alt="own-qn-3"></p>
-<p>补充trust-region-newton-method(trnm)回归:<a href="http://superashan.github.io/pdffile/lr/Trust-Region-Newton-Method-for-Large-Scale-Logistic.pdf" target="_blank" rel="noopener">trust-region-newton-method-for-large-scale-logistic-regression</a></p>
-<p>补充在线训练ctr的方法:<br>参考论文:<a href="http://superashan.github.io/pdffile/lr/ad-click-prediction.pdf" target="_blank" rel="noopener">Ad Click Prediction-a View from the Trenches_H. Brendan McMahan_2013.pdf</a><br><a href="http://www.datakit.cn/blog/2016/05/11/ftrl.html" target="_blank" rel="noopener">具体细节参考来自datakit</a><br>具体内容如下:</p>
-<p><img src="http://superashan.github.io/images/lr/ftrl_1.png" alt="ftrl_1"></p>
-<p><img src="http://superashan.github.io/images/lr/ftrl_2.png" alt="ftrl_2"></p>
-<p><img src="http://superashan.github.io/images/lr/ftrl_3.png" alt="ftrl_3"></p>
-<p><img src="http://superashan.github.io/images/lr/ftrl_4.png" alt="ftrl_4"></p>
-<p><img src="http://superashan.github.io/images/lr/ftrl_5.png" alt="ftrl_5"></p>
-<p><img src="http://superashan.github.io/images/lr/ftrl_6.png" alt="ftrl_6"></p>
+<p><img src="http://ashan2012.github.io/images/lr/own-qn-1.png" alt="own-qn-1"></p>
+<p><img src="http://ashan2012.github.io/images/lr/own-qn-2.png" alt="own-qn-2"></p>
+<p><img src="http://ashan2012.github.io/images/lr/own-qn-3.png" alt="own-qn-3"></p>
+<p>补充trust-region-newton-method(trnm)回归:<a href="http://ashan2012.github.io/pdffile/lr/Trust-Region-Newton-Method-for-Large-Scale-Logistic.pdf" target="_blank" rel="noopener">trust-region-newton-method-for-large-scale-logistic-regression</a></p>
+<p>补充在线训练ctr的方法:<br>参考论文:<a href="http://ashan2012.github.io/pdffile/lr/ad-click-prediction.pdf" target="_blank" rel="noopener">Ad Click Prediction-a View from the Trenches_H. Brendan McMahan_2013.pdf</a><br><a href="http://www.datakit.cn/blog/2016/05/11/ftrl.html" target="_blank" rel="noopener">具体细节参考来自datakit</a><br>具体内容如下:</p>
+<p><img src="http://ashan2012.github.io/images/lr/ftrl_1.png" alt="ftrl_1"></p>
+<p><img src="http://ashan2012.github.io/images/lr/ftrl_2.png" alt="ftrl_2"></p>
+<p><img src="http://ashan2012.github.io/images/lr/ftrl_3.png" alt="ftrl_3"></p>
+<p><img src="http://ashan2012.github.io/images/lr/ftrl_4.png" alt="ftrl_4"></p>
+<p><img src="http://ashan2012.github.io/images/lr/ftrl_5.png" alt="ftrl_5"></p>
+<p><img src="http://ashan2012.github.io/images/lr/ftrl_6.png" alt="ftrl_6"></p>
 <p>附：各个优化算法参考<a href="http://blog.csdn.net/langb2014/article/details/48915425" target="_blank" rel="noopener">csdn博客</a></p>
 
           

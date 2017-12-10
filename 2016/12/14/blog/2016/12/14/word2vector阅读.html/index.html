@@ -88,21 +88,21 @@
 <meta property="og:url" content="http://ashan2012.github.info/2016/12/14//blog/2016/12/14/word2vector阅读.html/index.html">
 <meta property="og:site_name" content="Ashan Blog">
 <meta property="og:description" content="##基本的参数介绍  size 输出的vector的维度 train 训练的文本，已经分好词，按照所有的行分割，一行最多10000个词 save-vocab 将文本中读取的词出现次数保存 read-vacab 不从训练的文本读取词次数，直接从文件中读取词的次数 debug 输出更多信息 binary 以二进制的方式保存模型，其实就是每个词语对应的vector cbow是否使用cbow模型 alph">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbowliucheng.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/negtive1.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/negtive2.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/negtive3.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/negtive4.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow_1.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow_1.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow_1.png">
-<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow_1.png">
-<meta property="og:updated_time" content="2017-12-10T13:58:48.000Z">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbow.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbowliucheng.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/negtive1.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/negtive2.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/negtive3.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/negtive4.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbow_1.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbow_1.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbow_1.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbow_1.png">
+<meta property="og:updated_time" content="2017-12-10T14:15:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="源码阅读系列之word2vector">
 <meta name="twitter:description" content="##基本的参数介绍  size 输出的vector的维度 train 训练的文本，已经分好词，按照所有的行分割，一行最多10000个词 save-vocab 将文本中读取的词出现次数保存 read-vacab 不从训练的文本读取词次数，直接从文件中读取词的次数 debug 输出更多信息 binary 以二进制的方式保存模型，其实就是每个词语对应的vector cbow是否使用cbow模型 alph">
-<meta name="twitter:image" content="http://superashan.github.io/images/word2vector/cbow.png">
+<meta name="twitter:image" content="http://ashan2012.github.io/images/word2vector/cbow.png">
 
 
 
@@ -522,9 +522,9 @@ void CreateBinaryTree() {
 </code></pre><p>``</p>
 <p>训练<br>l1 ns中表示word在sys1neg中的起始位置，主要用来获取负样本的vector<br>l2 cbow表示syn1中的非叶子节点的位置,主要用来获取非叶子节点的vector<br>taget ns中当前词语<br>label ns中当前词语的label,<br>neu1  隐藏层的vector<br>nuu1e 误差累积项</p>
 <p>两个模型cbow和skip-<br>具体的推理过程可以看<a href="http://blog.csdn.net/itplus/article/details/37969979" title="csdn 基于hs的模型" target="_blank" rel="noopener">csdn 基于hs的模型</a><br>其中cbow的模型结构如如下文:</p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow.png" alt="cbow结构图"></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow.png" alt="cbow结构图"></p>
 <p>cbow更新的伪代码如下:</p>
-<p><img src="http://superashan.github.io/images/word2vector/cbowliucheng.png" alt="cbow的更新伪码"></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbowliucheng.png" alt="cbow的更新伪码"></p>
 <p>看一下使用hs的cbow模型:</p>
 <pre><code>if (cbow) {  //train the cbow architecture
   // in -&gt; hidden
@@ -589,15 +589,15 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
   for (c = 0; c &lt; layer1_size; c++) syn1neg[c + l2] += g * neu1[c];
 }   
 </code></pre><p>附录，推导过程：<br>负抽样方法模型推导见:<br><a href="http://blog.csdn.net/itplus/article/details/37998797" target="_blank" rel="noopener">word2vector中的负抽样</a><br>大致思路为条件为上下文，正确的词语概率大，随机负抽样的概率小</p>
-<p><img src="http://superashan.github.io/images/word2vector/negtive1.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/negtive2.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/negtive3.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/negtive4.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/negtive1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/negtive2.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/negtive3.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/negtive4.png" alt=""></p>
 <p>cbow的推导过程:</p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
-<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://ashan2012.github.io/images/word2vector/cbow_1.png" alt=""></p>
 <p>写在结尾，以上推导过程来自<br><a href="http://my.csdn.net/peghoty" title="csdn 皮果提博客" target="_blank" rel="noopener">csdn 皮果提博客</a></p>
 <p>结尾十问：<strong><em>每次写完一个模型或者一个算法都要有问题</em></strong></p>
 <ol>

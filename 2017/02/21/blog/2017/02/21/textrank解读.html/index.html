@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://ashan2012.github.info/2017/02/21//blog/2017/02/21/textrank解读.html/index.html">
 <meta property="og:site_name" content="Ashan Blog">
 <meta property="og:description" content="最近在看一些自动摘要的东西，总结一下分为抽取式和生成式，其中抽取式的比较简单的一种是textrank.textrank其实也是提取关键词的一种比较方便的方式:具体原理为将句子组织成图，然后在图上运行pagerank算法。  网上有一个源码，用起来挺方便,叫TextRank4zh。看起来挺简单就看了一遍。Textrank下面有四个文件:Segmentation.py主要用于切词和切句子，TextR">
-<meta property="og:updated_time" content="2017-12-10T13:58:48.000Z">
+<meta property="og:updated_time" content="2017-12-10T14:15:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="源码阅读系列之textrank">
 <meta name="twitter:description" content="最近在看一些自动摘要的东西，总结一下分为抽取式和生成式，其中抽取式的比较简单的一种是textrank.textrank其实也是提取关键词的一种比较方便的方式:具体原理为将句子组织成图，然后在图上运行pagerank算法。  网上有一个源码，用起来挺方便,叫TextRank4zh。看起来挺简单就看了一遍。Textrank下面有四个文件:Segmentation.py主要用于切词和切句子，TextR">
@@ -340,7 +340,7 @@
 </blockquote>
 <p>网上有一个源码，用起来挺方便,叫TextRank4zh。看起来挺简单就看了一遍。<br>Textrank下面有四个文件:Segmentation.py主要用于切词和切句子，TextRAnk4Keyword.py主要用于提取关键词，TextRank4Sentence.py主要抽取关键的句子。util.py主要是关键词和句子排序。</p>
 <p>先看提取关键词:<br>TextRank4Keyword<br><strong>init</strong>.初始化.可以在stopword.txt中添加停止词<br>进入主函数analyze中，传入参数包括要进行提取的原文，关键词边的窗口大小，是够都变为小写,节点的类型选项（影响分词结果),边的类型，pagerank的参数。</p>
-<p>首先分词result = self.seg.segment(text=text, lower=lower).分词函数在Segmentation中.Segmentation初始化两个级别的分词项,WordSegmentation,SentenceSegmentation,词级别和句子级别。句子通过util.delimiters直接切割，然后词语切割直接调用结巴分词，具体结巴分词介绍可以参照:<a href="https://superashan.github.io/blog/2016/06/15/jieba%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB.html" title="源码阅读之jieba分词" target="_blank" rel="noopener">源码阅读之结巴分词</a>。<br>分词的时候通过allow_speech_tags控制生成词语的词性，返回的结果为dict，嵌套三层结构。第一层为选项，主要是是否使用停用词，和是否使用词性过滤两种，第二层对应句子，每个句子为word_list.</p>
+<p>首先分词result = self.seg.segment(text=text, lower=lower).分词函数在Segmentation中.Segmentation初始化两个级别的分词项,WordSegmentation,SentenceSegmentation,词级别和句子级别。句子通过util.delimiters直接切割，然后词语切割直接调用结巴分词，具体结巴分词介绍可以参照:<a href="https://ashan2012.github.io/blog/2016/06/15/jieba%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB.html" title="源码阅读之jieba分词" target="_blank" rel="noopener">源码阅读之结巴分词</a>。<br>分词的时候通过allow_speech_tags控制生成词语的词性，返回的结果为dict，嵌套三层结构。第一层为选项，主要是是否使用停用词，和是否使用词性过滤两种，第二层对应句子，每个句子为word_list.</p>
 <p>分词之后就进行图的构造，图构造然后排序函数为:util.sort_words.进入util.py文件中，sort_words函数中，首先是构造图:</p>
 <pre><code>for word_list in _vertex_source:
     for word in word_list:
