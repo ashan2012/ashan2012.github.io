@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="word2vector wordtovector 词向量 源码 源代码 负抽样 cbow," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Ashan Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="##基本的参数介绍  size 输出的vector的维度 train 训练的文本，已经分好词，按照所有的行分割，一行最多10000个词 save-vocab 将文本中读取的词出现次数保存 read-vacab 不从训练的文本读取词次数，直接从文件中读取词的次数 debug 输出更多信息 binary 以二进制的方式保存模型，其实就是每个词语对应的vector cbow是否使用cbow模型 alph">
+<meta name="keywords" content="word2vector wordtovector 词向量 源码 源代码 负抽样 cbow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码阅读系列之word2vector">
+<meta property="og:url" content="http://ashan2012.github.info/2016/12/14//blog/2016/12/14/word2vector阅读.html/index.html">
+<meta property="og:site_name" content="Ashan Blog">
+<meta property="og:description" content="##基本的参数介绍  size 输出的vector的维度 train 训练的文本，已经分好词，按照所有的行分割，一行最多10000个词 save-vocab 将文本中读取的词出现次数保存 read-vacab 不从训练的文本读取词次数，直接从文件中读取词的次数 debug 输出更多信息 binary 以二进制的方式保存模型，其实就是每个词语对应的vector cbow是否使用cbow模型 alph">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbowliucheng.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/negtive1.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/negtive2.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/negtive3.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/negtive4.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow_1.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow_1.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow_1.png">
+<meta property="og:image" content="http://superashan.github.io/images/word2vector/cbow_1.png">
+<meta property="og:updated_time" content="2017-12-10T13:58:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="源码阅读系列之word2vector">
+<meta name="twitter:description" content="##基本的参数介绍  size 输出的vector的维度 train 训练的文本，已经分好词，按照所有的行分割，一行最多10000个词 save-vocab 将文本中读取的词出现次数保存 read-vacab 不从训练的文本读取词次数，直接从文件中读取词的次数 debug 输出更多信息 binary 以二进制的方式保存模型，其实就是每个词语对应的vector cbow是否使用cbow模型 alph">
+<meta name="twitter:image" content="http://superashan.github.io/images/word2vector/cbow.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ashan2012.github.info/2016/12/14//blog/2016/12/14/word2vector阅读.html/"/>
+
+
+
+
+
+  <title>源码阅读系列之word2vector | Ashan Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ashan Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            Schedule
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ashan2012.github.info/2016/12/14/blog/2016/12/14/word2vector阅读.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="super ashan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ashan Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">源码阅读系列之word2vector</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-14T00:00:00+08:00">
+                2016-12-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码阅读</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>##基本的参数介绍</p>
+<ul>
+<li><strong>size</strong> 输出的vector的维度</li>
+<li><strong>train</strong> 训练的文本，已经分好词，按照所有的行分割，一行最多10000个词</li>
+<li><strong>save-vocab</strong> 将文本中读取的词出现次数保存</li>
+<li><strong>read-vacab</strong> 不从训练的文本读取词次数，直接从文件中读取词的次数</li>
+<li><strong>debug</strong> 输出更多信息</li>
+<li><strong>binary</strong> 以二进制的方式保存模型，其实就是每个词语对应的vector</li>
+<li><strong>cbow</strong>是否使用cbow模型</li>
+<li><strong>alpha</strong> 梯度下降的初始学习率，默认的skip-gram 0.025,cbow 0.05,实际是每处理10000个词，   alpha慢慢减小</li>
+<li><strong>window</strong> 前后词的窗口最大长度(context(w))的长度，实际会有一个0-window的随机</li>
+<li><strong>sample</strong> 采样的时候高频词会有一定的丢弃概率</li>
+<li><strong>hs</strong> 是否使用Hierarchical Softmax，默认等于0，不使用</li>
+<li><strong>negtive</strong> 负采样词语个数</li>
+<li><strong>threads</strong> 线程个数，默认12</li>
+<li><strong>iter</strong> 迭代次数，默认是5</li>
+<li><strong>min-count</strong> 低于min-count的词语直接丢弃</li>
+<li><strong>classes</strong> 输出的是word的类别，不是vector</li>
+</ul>
+<p>##示例<br><strong>./word2vec -train data.txt -output vec.txt -size 200 -window 5 -sample 1e-4 -negative 5 -hs 0 -binary 0 -cbow 1 -iter 3</strong></p>
+<ol>
+<li>tricks 提前算好sigmod函数:</li>
+</ol>
+<p>``</p>
+<pre><code>expTable = (real *)malloc((EXP_TABLE_SIZE + 1) * sizeof(real));
+for (i = 0; i &lt; EXP_TABLE_SIZE; i++) {
+    expTable[i] = exp((i / (real)EXP_TABLE_SIZE * 2 - 1) * MAX_EXP);
+    expTable[i] = expTable[i] / (expTable[i] + 1); 
+}
+</code></pre><p>``</p>
+<p>##数据结构介绍<br>``softmax存储词语的huffuman编码信息</p>
+<pre><code>struct vocab_word 
+{  
+      long long cn; //词频  
+      int *point; //huffman编码对应内节点的路径  
+      char *word, *code, codelen;//huffman编码  
+};
+</code></pre><p>``<br>数组vocab存取词语信息，每次1000的量增加</p>
+<p>##函数介绍<br>  <code>TrainModel()</code></p>
+<p>读取每个词语，存入vacab，和vacab_hash中.</p>
+<p>从词表中读入信息:<br>读入代码:</p>
+<p>``</p>
+<pre><code>//我觉得此处有问题，为什么没有读入词频
+vocab[vocab_size].word = (char *)calloc(length, sizeof(char))
+strcpy(vocab[vocab_size].word, word); 
+vocab[vocab_size].cn = 0;
+vocab_size++; 
+</code></pre><p>``</p>
+<p>hash采用线性冲突法。顺序往下找:<br>``</p>
+<pre><code>hash = GetWordHash(word); 
+while (vocab_hash[hash] != -1) hash = (hash + 1) % vocab_hash_size;
+vocab_hash[hash] = vocab_size - 1;
+</code></pre><p>``</p>
+<p>其中hash值的获得很巧妙:<br>``</p>
+<pre><code>int GetWordHash(char *word) {  
+    unsigned long long a, hash = 0;
+    for (a = 0; a &lt; strlen(word); a++) hash = hash * 257 + word[a];
+    hash = hash % vocab_hash_size;
+    return hash;
+}
+</code></pre><p><code>读取词语结束后，</code>SortVocab``所有的词语排序，然后去掉出现次数小于min_count的词语，然后重新调整vacab_hash,同时开辟存储二叉树的节点，路径的排序</p>
+<p>从训练级中读取数据:<br>相同的思路但是需要在词语数目大的时候，删减词语集合<br>``</p>
+<pre><code>if (vocab_size &gt; vocab_hash_size * 0.7) ReduceVocab();
+//默认min_reduce=1
+void ReduceVocab() {
+      int a, b = 0;
+      unsigned int hash;
+      for (a = 0; a &lt; vocab_size; a++) if (vocab[a].cn &gt; min_reduce) {
+        vocab[b].cn = vocab[a].cn;
+        vocab[b].word = vocab[a].word;
+            b++;
+      } else free(vocab[a].word);
+      vocab_size = b;
+     for (a = 0; a &lt; vocab_hash_size; a++) vocab_hash[a] = -1; 
+      for (a = 0; a &lt; vocab_size; a++) {
+    // Hash will be re-computed, as it is not actual
+           hash = GetWordHash(vocab[a].word);
+            while (vocab_hash[hash] != -1) hash = (hash + 1) % vocab_hash_size;
+         vocab_hash[hash] = a;
+  }
+  fflush(stdout);
+  min_reduce++;
+}
+</code></pre><p>``</p>
+<p>huffuman树的建树很有意思:<br>``</p>
+<pre><code>//实际写一个6,5,4,3,2,1的过程就明白了
+void CreateBinaryTree() {
+    long long a, b, i, min1i, min2i, pos1, pos2, point[MAX_CODE_LENGTH];
+    char code[MAX_CODE_LENGTH];
+    long long *count = (long long *)calloc(vocab_size * 2 + 1, sizeof(long long));
+    long long *binary = (long long *)calloc(vocab_size * 2 + 1, sizeof(long long));
+    long long *parent_node = (long long *)calloc(vocab_size * 2 + 1, sizeof(long long));
+    for (a = 0; a &lt; vocab_size; a++) count[a] = vocab[a].cn;
+    for (a = vocab_size; a &lt; vocab_size * 2; a++) count[a] = 1e15;
+    pos1 = vocab_size - 1;
+    pos2 = vocab_size;
+    // Following algorithm constructs the Huffman tree by adding one node at a time
+    for (a = 0; a &lt; vocab_size - 1; a++) {
+        // First, find two smallest nodes &apos;min1, min2&apos;
+        if (pos1 &gt;= 0) {
+            if (count[pos1] &lt; count[pos2]) {
+                min1i = pos1;
+                pos1--;
+            } else {
+                min1i = pos2;
+                pos2++;
+            }
+       } else {
+           min1i = pos2;
+           pos2++;
+       }   
+       if (pos1 &gt;= 0) {
+           if (count[pos1] &lt; count[pos2]) {
+               min2i = pos1;
+               pos1--;
+          } else {
+              min2i = pos2;
+              pos2++;
+          }
+       } else {
+           min2i = pos2;
+           pos2++;
+       }      
+      count[vocab_size + a] = count[min1i] + count[min2i]; //min1,min2为每次组建树        
+                                                           //的叶子节点，其中min2i    
+                                                           //为较大的那一个叶子节点
+      parent_node[min1i] = vocab_size + a;  //存储父子关系
+      parent_node[min2i] = vocab_size + a;
+      binary[min2i] = 1;   //存储0，1作为路径
+   }
+   // Now assign binary code to each vocabulary word
+   //point太牛逼,point第一位一直为vocab_size-2,为树的根节点，在code中不存储根节点
+
+   for (a = 0; a &lt; vocab_size; a++) {
+     b = a;
+     i = 0;
+     while (1) {
+        code[i] = binary[b];
+        point[i] = b;
+        i++;
+        b = parent_node[b];
+        if (b == vocab_size * 2 - 2) break;
+     }
+     vocab[a].codelen = i;
+     vocab[a].point[0] = vocab_size - 2;
+     for (b = 0; b &lt; i; b++) {
+         vocab[a].code[i - b - 1] = code[b];   //顺序倒过来，从根节点下一层往下到叶子      
+                                               //节点
+         vocab[a].point[i - b] = point[b] - vocab_size; //meikandong
+     }
+  }
+  free(count);
+  free(binary);
+  free(parent_node);
+}
+</code></pre><p>``</p>
+<p>接下来是负抽样的初始化,根据词的个数生成概率数组<br>``</p>
+<pre><code>void InitUnigramTable() {
+      int a, i;
+      long long train_words_pow = 0;
+      real d1, power = 0.75;
+     table = (int *)malloc(table_size * sizeof(int));
+      for (a = 0; a &lt; vocab_size; a++) train_words_pow += pow(vocab[a].cn, power);
+      i = 0;
+      d1 = pow(vocab[i].cn, power) / (real)train_words_pow;
+      for (a = 0; a &lt; table_size; a++) {
+        table[a] = i;
+        if (a / (real)table_size &gt; d1) {
+              i++;
+              d1 += pow(vocab[i].cn, power) / (real)train_words_pow;
+        }
+       if (i &gt;= vocab_size) i = vocab_size - 1;
+      }
+}
+//生成table,[0,0,0,0,1,1,1,2]
+</code></pre><p>``</p>
+<p>训练<br>l1 ns中表示word在sys1neg中的起始位置，主要用来获取负样本的vector<br>l2 cbow表示syn1中的非叶子节点的位置,主要用来获取非叶子节点的vector<br>taget ns中当前词语<br>label ns中当前词语的label,<br>neu1  隐藏层的vector<br>nuu1e 误差累积项</p>
+<p>两个模型cbow和skip-<br>具体的推理过程可以看<a href="http://blog.csdn.net/itplus/article/details/37969979" title="csdn 基于hs的模型" target="_blank" rel="noopener">csdn 基于hs的模型</a><br>其中cbow的模型结构如如下文:</p>
+<p><img src="http://superashan.github.io/images/word2vector/cbow.png" alt="cbow结构图"></p>
+<p>cbow更新的伪代码如下:</p>
+<p><img src="http://superashan.github.io/images/word2vector/cbowliucheng.png" alt="cbow的更新伪码"></p>
+<p>看一下使用hs的cbow模型:</p>
+<pre><code>if (cbow) {  //train the cbow architecture
+  // in -&gt; hidden
+  cw = 0;
+  for (a = b; a &lt; window * 2 + 1 - b; a++) if (a != window) {   //context(w)输入上下文相加得到隐藏层
+    c = sentence_position - window + a;
+    if (c &lt; 0) continue;
+    if (c &gt;= sentence_length) continue;
+    last_word = sen[c];
+    if (last_word == -1) continue;
+    for (c = 0; c &lt; layer1_size; c++) neu1[c] += syn0[c + last_word * layer1_size];
+    cw++;
+  }   
+  if (cw) {
+    for (c = 0; c &lt; layer1_size; c++) neu1[c] /= cw;   //隐藏层的变量除以输入的变量个数
+    if (hs) for (d = 0; d &lt; vocab[word].codelen; d++) {
+      f = 0;
+      l2 = vocab[word].point[d] * layer1_size;  //非叶子节点的位置
+      // Propagate hidden -&gt; output
+      for (c = 0; c &lt; layer1_size; c++) f += neu1[c] * syn1[c + l2];   //逻辑函数的因变量,Xw*参数,即非叶子节点向量
+      if (f &lt;= -MAX_EXP) continue;
+      else if (f &gt;= MAX_EXP) continue;
+      else f = expTable[(int)((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))];  //分类的概率值
+      // &apos;g&apos; is the gradient multiplied by the learning rate
+      g = (1 - vocab[word].code[d] - f) * alpha;    
+      // Propagate errors output -&gt; hidden
+      for (c = 0; c &lt; layer1_size; c++) neu1e[c] += g * syn1[c + l2];  //误差累积项，用来更新词向量，上下文词的向量
+      // Learn weights hidden -&gt; output
+      for (c = 0; c &lt; layer1_size; c++) syn1[c + l2] += g * neu1[c];   //更新非叶子节点的向量，即参数向量
+    }   
+   //文中此处为负抽样的代码
+   //更新所有上下文词的词向量
+    // hidden -&gt; in
+    for (a = b; a &lt; window * 2 + 1 - b; a++) if (a != window) {
+      c = sentence_position - window + a;
+      if (c &lt; 0) continue;
+      if (c &gt;= sentence_length) continue;
+      last_word = sen[c];
+      if (last_word == -1) continue;
+      for (c = 0; c &lt; layer1_size; c++) syn0[c + last_word * layer1_size] += neu1e[c]; //这一步更新
+    }
+</code></pre><p>负抽样的代码如下:</p>
+<pre><code>  // NEGATIVE SAMPLING
+if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
+  if (d == 0) {
+    target = word;
+    label = 1;
+  } else {
+    next_random = next_random * (unsigned long long)25214903917 + 11; 
+    target = table[(next_random &gt;&gt; 16) % table_size];
+    if (target == 0) target = next_random % (vocab_size - 1) + 1;
+    if (target == word) continue;
+    label = 0;
+  }   
+  l2 = target * layer1_size;
+  f = 0;
+  for (c = 0; c &lt; layer1_size; c++) f += neu1[c] * syn1neg[c + l2];
+  if (f &gt; MAX_EXP) g = (label - 1) * alpha;
+  else if (f &lt; -MAX_EXP) g = (label - 0) * alpha;
+  else g = (label - expTable[(int)((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))]) * alpha;
+  for (c = 0; c &lt; layer1_size; c++) neu1e[c] += g * syn1neg[c + l2];
+  for (c = 0; c &lt; layer1_size; c++) syn1neg[c + l2] += g * neu1[c];
+}   
+</code></pre><p>附录，推导过程：<br>负抽样方法模型推导见:<br><a href="http://blog.csdn.net/itplus/article/details/37998797" target="_blank" rel="noopener">word2vector中的负抽样</a><br>大致思路为条件为上下文，正确的词语概率大，随机负抽样的概率小</p>
+<p><img src="http://superashan.github.io/images/word2vector/negtive1.png" alt=""></p>
+<p><img src="http://superashan.github.io/images/word2vector/negtive2.png" alt=""></p>
+<p><img src="http://superashan.github.io/images/word2vector/negtive3.png" alt=""></p>
+<p><img src="http://superashan.github.io/images/word2vector/negtive4.png" alt=""></p>
+<p>cbow的推导过程:</p>
+<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p><img src="http://superashan.github.io/images/word2vector/cbow_1.png" alt=""></p>
+<p>写在结尾，以上推导过程来自<br><a href="http://my.csdn.net/peghoty" title="csdn 皮果提博客" target="_blank" rel="noopener">csdn 皮果提博客</a></p>
+<p>结尾十问：<strong><em>每次写完一个模型或者一个算法都要有问题</em></strong></p>
+<ol>
+<li><p><strong><em>wordtovecotor训练的词向量区别于one-hot模型的地方有哪些？</em></strong></p>
+<p> 语义特性。wordtovecotr训练的词向量表示的是语义空间的点，点之间的远近关系通过词之间的共现关系训练得到。</p>
+</li>
+<li><p><strong><em>训练方法上，为什么负抽样可以得到和window方法相似的效果？</em></strong></p>
+<p> 训练空间上有语义传播性，所以在区分的不同语义的内容时，只需要区分一个就好。例如a和b关系较远，b和c关系较远，则a和c的关系也较远，这个负抽样也能达到效果的原因</p>
+</li>
+<li><p><strong><em>wordtovector中如何霍夫曼树是为什么可以实现等同softmax的作用？</em></strong></p>
+<p> 以三层霍夫曼树为例，每次拆分概率为p,q,r.最后叶子节点的概率和为: p.q+p(1-q)+(1-p)r+(1-p)(1-r)=1</p>
+</li>
+<li><p><strong><em>wordtovector中词向量为什么可以表示语义空间的点？</em></strong></p>
+<p> 霍夫曼树种每个节点的分裂表示的语义的一次分类，则经过整棵树的分类之后就到了叶子节点就是语义空间的一个点</p>
+</li>
+<li><p><strong><em>wordtovector中对高频词和低频词处理的原则，以及为什么这么做?</em></strong></p>
+<p>低频词按照阈值丢掉，如果内容加载不下，提高阈值。<br>高频词按照一定的概率丢弃。<br>低频词本来就无法训练出来语义特征<br>高频词按照论文的解释，高频词由于共现的词很多，语义特征不具有区分性。比如训练巴黎的时候，更希望和纽约一块训练，而不是和“的”一块儿训练</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/word2vector-wordtovector-词向量-源码-源代码-负抽样-cbow/" rel="tag"># word2vector wordtovector 词向量 源码 源代码 负抽样 cbow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/08/blog/2016/11/08/最小二乘法.html/" rel="next" title="数据基础系列之一：最小二乘法">
+                <i class="fa fa-chevron-left"></i> 数据基础系列之一：最小二乘法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/13/blog/2017/01/13/guesswantquery.html/" rel="prev" title="工作笔记之一：猜你喜欢模块">
+                工作笔记之一：猜你喜欢模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">super ashan</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">Artikel</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">Kategorien</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">Tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">super ashan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
