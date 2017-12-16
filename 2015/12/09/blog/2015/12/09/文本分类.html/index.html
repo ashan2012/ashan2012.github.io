@@ -348,28 +348,27 @@
 <blockquote>
 <p>整个文本分类系列从开始介绍文本分类工程工作的流程，然后介绍了其中的一个个模块，最后会介绍在文本分类中碰到一些特殊的情况该如何处理。这篇文章主要介绍文本分类的一些基本概念以及整个模块包含哪些工作以及如何评价分类的好坏.我们从三个问题入手，什么是文本分类？文本分类怎么做？分类的效果如何评价？</p>
 </blockquote>
-<p>##什么是文本分类？<br>    文本分类(Text Classification)是指将文本按照内容的不同判别到一个或多个预先确定的文本类别之中的过程,所以文本文类是一种有指导的<br>    映射过程（术语叫做监督学习过程），整个过程中，需要计算机通过已经标注好的数据，学习特征和类别之间的关系模型，然后以此模型来预测新的文本所属的类别</p>
-<p>我们用数学来解释这个问题。给定了文本集合$$D\{d_1,d_2,..d_{|D|}\}$$,类别集合 $$C\{c_1,c_2,..c_{|C|}\}$$,假设存在理想的映射$\phi$,既$\phi(d_1)$是已知的(对应于训练集中的结果)，我们的工作是找到一个映射$\psi$,去优化</p>
-<p>$$<br> Min\left.\sum^{|D|}_{i=1}f(\phi(d_i)-\psi(d_i))\right.<br>$$</p>
-<p>其中f为评估函数，最终目的是实现理想模型和计算模型之间的评估的损失最小</p>
-<p>##文本分类有哪些特点？</p>
-<p>###&gt;特征空间高维</p>
-<p>  &#160; &#160; &#160; &#160;文本数据在大多数情况下是高维的，汉字，英语组合的词至少百万甚至千万量级，一般情况下文本经过分词，去掉停用词之后剩下几十万算是很正常的，如果此时以词语作为特征，那么特征空间的维度会非常高，这么高的维度对于大多数机器学习算法来说都是一种灾难</p>
-<p>###&gt;特征向量稀疏<br>  &#160; &#160; &#160; &#160;对于文本，虽然整体的特征空间是高维的，但是对于每一项文档而言，往往只包含少数的词语。同时去掉高频词（通常所说的IDF较低）和低频词语（IDF超高，而且tf较小）之后，每个文档剩下的词语更少，既特征向量中大部分值都是0，这也是文本分类的一个显著特点</p>
-<p>###&gt;特征语义相关<br>   &#160; &#160; &#160; &#160;许多基于统计的算法往往假设特征之间相互独立，但是在文本分类之中，恰恰相反，词语之间高度相关，所以好的文本分类器往往考虑了词语之间的关系</p>
-<p>##文本分类的基本步骤是什么？<br>   &#160; &#160; &#160; &#160;文本分类包括获取数据，数据预处理，特征化（表示），特征选择，特征加权，训练分类器模型，评价模型，预测新的文本的结果<br>   之后的博客会将处理的每个步骤写成单独的博文。</p>
-<p>##如何评价文本分类<br>  &#160; &#160; &#160; &#160;分类的指标一般有三个。（当然这些评价指标一般都是在训练集上完成的，也就是通过实验所得。但是一般分类的结果好坏是有很多影响因素的，如训练集的选择的分布等，这些情况无法通过分类的指标获得）至于数据集的问题，中文文本可以采用搜狗实验室的文本材料，交叉验证做模型训练。</p>
+<h2 id="什么是文本分类？"><a href="#什么是文本分类？" class="headerlink" title="什么是文本分类？"></a>什么是文本分类？</h2><pre><code>文本分类(Text Classification)是指将文本按照内容的不同判别到一个或多个预先确定的文本类别之中的过程,所以文本文类是一种有指导的
+映射过程（术语叫做监督学习过程），整个过程中，需要计算机通过已经标注好的数据，学习特征和类别之间的关系模型，然后以此模型来预测新的文本所属的类别
+</code></pre><p>我们用数学来解释这个问题。给定了文本集合<script type="math/tex">D\{d_1,d_2,..d_{\|D\|}\}</script>,类别集合 <script type="math/tex">C\{c_1,c_2,..c_{\|C\|}\}</script>,假设存在理想的映射$\phi$,既$\phi(d_1)$是已知的(对应于训练集中的结果)，我们的工作是找到一个映射$\psi$,去优化</p>
+<script type="math/tex; mode=display">
+ Min\left.\sum^{|D|}_{i=1}f(\phi(d_i)-\psi(d_i))\right.</script><p>其中f为评估函数，最终目的是实现理想模型和计算模型之间的评估的损失最小</p>
+<h2 id="文本分类有哪些特点？"><a href="#文本分类有哪些特点？" class="headerlink" title="文本分类有哪些特点？"></a>文本分类有哪些特点？</h2><h3 id="gt-特征空间高维"><a href="#gt-特征空间高维" class="headerlink" title="&gt;特征空间高维"></a>&gt;特征空间高维</h3><p>  &#160; &#160; &#160; &#160;文本数据在大多数情况下是高维的，汉字，英语组合的词至少百万甚至千万量级，一般情况下文本经过分词，去掉停用词之后剩下几十万算是很正常的，如果此时以词语作为特征，那么特征空间的维度会非常高，这么高的维度对于大多数机器学习算法来说都是一种灾难</p>
+<h3 id="gt-特征向量稀疏"><a href="#gt-特征向量稀疏" class="headerlink" title="&gt;特征向量稀疏"></a>&gt;特征向量稀疏</h3><p>  &#160; &#160; &#160; &#160;对于文本，虽然整体的特征空间是高维的，但是对于每一项文档而言，往往只包含少数的词语。同时去掉高频词（通常所说的IDF较低）和低频词语（IDF超高，而且tf较小）之后，每个文档剩下的词语更少，既特征向量中大部分值都是0，这也是文本分类的一个显著特点</p>
+<h3 id="gt-特征语义相关"><a href="#gt-特征语义相关" class="headerlink" title="&gt;特征语义相关"></a>&gt;特征语义相关</h3><p>   &#160; &#160; &#160; &#160;许多基于统计的算法往往假设特征之间相互独立，但是在文本分类之中，恰恰相反，词语之间高度相关，所以好的文本分类器往往考虑了词语之间的关系</p>
+<h2 id="文本分类的基本步骤是什么？"><a href="#文本分类的基本步骤是什么？" class="headerlink" title="文本分类的基本步骤是什么？"></a>文本分类的基本步骤是什么？</h2><p>   &#160; &#160; &#160; &#160;文本分类包括获取数据，数据预处理，特征化（表示），特征选择，特征加权，训练分类器模型，评价模型，预测新的文本的结果<br>   之后的博客会将处理的每个步骤写成单独的博文。</p>
+<h2 id="如何评价文本分类"><a href="#如何评价文本分类" class="headerlink" title="如何评价文本分类"></a>如何评价文本分类</h2><p>  &#160; &#160; &#160; &#160;分类的指标一般有三个。（当然这些评价指标一般都是在训练集上完成的，也就是通过实验所得。但是一般分类的结果好坏是有很多影响因素的，如训练集的选择的分布等，这些情况无法通过分类的指标获得）至于数据集的问题，中文文本可以采用搜狗实验室的文本材料，交叉验证做模型训练。</p>
 <p>  评价指标包括准确率，召回率，$F_1$值<br>  文本分类的结果可以表示为：</p>
 <p> ||                         || <em>实际属于该类的文本数</em> || <em>实际不属于该类的文本数</em> ||<br> || 分类器判别为该类的文本数   || a                    || b                     ||<br> || 分类器判别不为该类的文本数 || c                    || d                     ||</p>
 <p> 准确率是指分类器判别为某个类别的文本中实际属于该类别的文本所占的比例，计算公式如下：</p>
-<p>$$<br>p=\frac{a}{a+b}<br>$$</p>
-<p>召回率是指实际属于某个类别的文本分类器判别为该类别的文本所占的比例，计算公式如下：</p>
-<p>$$<br>r=\frac{a}{a+c}<br>$$</p>
-<p>准确率表明准确性，召回率反应分类器的完备性。至于具体选择哪个指标可能根据实际情况不一样，一般通用的分类器评价好坏的时候往往选用另外一个叫做F值来评价。普通的$F_1$值为：</p>
-<p>$$<br>F_1=\frac{2<em>p</em>r}{p+r}<br>$$</p>
-<p>还有一种$F_1$的变形，叫做$F_a$:</p>
-<p>$$<br>F_a=\frac{(a^2+1)<em>p</em>r}{a^2*p+r}<br>$$</p>
-<p>a&gt;=0用来调整准确率和召回率之间的权重。a=0时，$F_a=p$,a=1时，$F_a=F_1$</p>
+<script type="math/tex; mode=display">
+p=\frac{a}{a+b}</script><p>召回率是指实际属于某个类别的文本分类器判别为该类别的文本所占的比例，计算公式如下：</p>
+<script type="math/tex; mode=display">
+r=\frac{a}{a+c}</script><p>准确率表明准确性，召回率反应分类器的完备性。至于具体选择哪个指标可能根据实际情况不一样，一般通用的分类器评价好坏的时候往往选用另外一个叫做F值来评价。普通的$F_1$值为：</p>
+<script type="math/tex; mode=display">
+F_1=\frac{2*p*r}{p+r}</script><p>还有一种$F_1$的变形，叫做$F_a$:</p>
+<script type="math/tex; mode=display">
+F_a=\frac{(a^2+1)*p*r}{a^2*p+r}</script><p>a&gt;=0用来调整准确率和召回率之间的权重。a=0时，$F_a=p$,a=1时，$F_a=F_1$</p>
 
       
     </div>
@@ -472,8 +471,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -543,6 +551,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是文本分类？"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x6587;&#x672C;&#x5206;&#x7C7B;&#xFF1F;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x6587;&#x672C;&#x5206;&#x7C7B;&#xFF1F;"></a>&#x4EC0;&#x4E48;&#x662F;&#x6587;&#x672C;&#x5206;&#x7C7B;&#xFF1F;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本分类有哪些特点？"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x6587;&#x672C;&#x5206;&#x7C7B;&#x6709;&#x54EA;&#x4E9B;&#x7279;&#x70B9;&#xFF1F;" class="headerlink" title="&#x6587;&#x672C;&#x5206;&#x7C7B;&#x6709;&#x54EA;&#x4E9B;&#x7279;&#x70B9;&#xFF1F;"></a>&#x6587;&#x672C;&#x5206;&#x7C7B;&#x6709;&#x54EA;&#x4E9B;&#x7279;&#x70B9;&#xFF1F;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gt-特征空间高维"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#gt-&#x7279;&#x5F81;&#x7A7A;&#x95F4;&#x9AD8;&#x7EF4;" class="headerlink" title="&gt;&#x7279;&#x5F81;&#x7A7A;&#x95F4;&#x9AD8;&#x7EF4;"></a>&gt;&#x7279;&#x5F81;&#x7A7A;&#x95F4;&#x9AD8;&#x7EF4;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gt-特征向量稀疏"><span class="nav-number">2.2.</span> <span class="nav-text"><a href="#gt-&#x7279;&#x5F81;&#x5411;&#x91CF;&#x7A00;&#x758F;" class="headerlink" title="&gt;&#x7279;&#x5F81;&#x5411;&#x91CF;&#x7A00;&#x758F;"></a>&gt;&#x7279;&#x5F81;&#x5411;&#x91CF;&#x7A00;&#x758F;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gt-特征语义相关"><span class="nav-number">2.3.</span> <span class="nav-text"><a href="#gt-&#x7279;&#x5F81;&#x8BED;&#x4E49;&#x76F8;&#x5173;" class="headerlink" title="&gt;&#x7279;&#x5F81;&#x8BED;&#x4E49;&#x76F8;&#x5173;"></a>&gt;&#x7279;&#x5F81;&#x8BED;&#x4E49;&#x76F8;&#x5173;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本分类的基本步骤是什么？"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x6587;&#x672C;&#x5206;&#x7C7B;&#x7684;&#x57FA;&#x672C;&#x6B65;&#x9AA4;&#x662F;&#x4EC0;&#x4E48;&#xFF1F;" class="headerlink" title="&#x6587;&#x672C;&#x5206;&#x7C7B;&#x7684;&#x57FA;&#x672C;&#x6B65;&#x9AA4;&#x662F;&#x4EC0;&#x4E48;&#xFF1F;"></a>&#x6587;&#x672C;&#x5206;&#x7C7B;&#x7684;&#x57FA;&#x672C;&#x6B65;&#x9AA4;&#x662F;&#x4EC0;&#x4E48;&#xFF1F;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何评价文本分类"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x5982;&#x4F55;&#x8BC4;&#x4EF7;&#x6587;&#x672C;&#x5206;&#x7C7B;" class="headerlink" title="&#x5982;&#x4F55;&#x8BC4;&#x4EF7;&#x6587;&#x672C;&#x5206;&#x7C7B;"></a>&#x5982;&#x4F55;&#x8BC4;&#x4EF7;&#x6587;&#x672C;&#x5206;&#x7C7B;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -587,7 +611,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共11.9k字</span>
+  <span class="post-count">博客全站共11.8k字</span>
 </div>
 
         
@@ -701,7 +725,24 @@
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
