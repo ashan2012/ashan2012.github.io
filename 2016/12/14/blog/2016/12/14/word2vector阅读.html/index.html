@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="word2vector wordtovector 词向量 源码 源代码 负抽样 cbow," />
+  <meta name="keywords" content="源码,源代码,word2vector,wordtovector,词向量,负抽样,cbow," />
 
 
 
@@ -82,7 +82,7 @@
 
 
 <meta name="description" content="##基本的参数介绍  size 输出的vector的维度 train 训练的文本，已经分好词，按照所有的行分割，一行最多10000个词 save-vocab 将文本中读取的词出现次数保存 read-vacab 不从训练的文本读取词次数，直接从文件中读取词的次数 debug 输出更多信息 binary 以二进制的方式保存模型，其实就是每个词语对应的vector cbow是否使用cbow模型 alph">
-<meta name="keywords" content="word2vector wordtovector 词向量 源码 源代码 负抽样 cbow">
+<meta name="keywords" content="源码,源代码,word2vector,wordtovector,词向量,负抽样,cbow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="源码阅读系列之word2vector">
 <meta property="og:url" content="http://ashan2012.github.info/2016/12/14//blog/2016/12/14/word2vector阅读.html/index.html">
@@ -99,7 +99,7 @@
 <meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbow_1.png">
 <meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbow_1.png">
 <meta property="og:image" content="http://ashan2012.github.io/images/word2vector/cbow_1.png">
-<meta property="og:updated_time" content="2017-12-16T11:44:08.000Z">
+<meta property="og:updated_time" content="2017-12-16T13:18:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="源码阅读系列之word2vector">
 <meta name="twitter:description" content="##基本的参数介绍  size 输出的vector的维度 train 训练的文本，已经分好词，按照所有的行分割，一行最多10000个词 save-vocab 将文本中读取的词出现次数保存 read-vacab 不从训练的文本读取词次数，直接从文件中读取词的次数 debug 输出更多信息 binary 以二进制的方式保存模型，其实就是每个词语对应的vector cbow是否使用cbow模型 alph">
@@ -378,228 +378,34 @@
 <ol>
 <li>tricks 提前算好sigmod函数:</li>
 </ol>
-<p>``</p>
-<pre><code>expTable = (real *)malloc((EXP_TABLE_SIZE + 1) * sizeof(real));
-for (i = 0; i &lt; EXP_TABLE_SIZE; i++) {
-    expTable[i] = exp((i / (real)EXP_TABLE_SIZE * 2 - 1) * MAX_EXP);
-    expTable[i] = expTable[i] / (expTable[i] + 1); 
-}
-</code></pre><p>``</p>
-<p>##数据结构介绍<br>``softmax存储词语的huffuman编码信息</p>
-<pre><code>struct vocab_word 
-{  
-      long long cn; //词频  
-      int *point; //huffman编码对应内节点的路径  
-      char *word, *code, codelen;//huffman编码  
-};
-</code></pre><p>``<br>数组vocab存取词语信息，每次1000的量增加</p>
-<p>##函数介绍<br>  <code>TrainModel()</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">expTable = (real *)<span class="built_in">malloc</span>((EXP_TABLE_SIZE + <span class="number">1</span>) * <span class="keyword">sizeof</span>(real));</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; EXP_TABLE_SIZE; i++) &#123;</span><br><span class="line">    expTable[i] = <span class="built_in">exp</span>((i / (real)EXP_TABLE_SIZE * <span class="number">2</span> - <span class="number">1</span>) * MAX_EXP);</span><br><span class="line">    expTable[i] = expTable[i] / (expTable[i] + <span class="number">1</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>##数据结构介绍<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">//softmax存储词语的huffuman编码信息</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">vocab_word</span> </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line"> 		<span class="keyword">long</span> <span class="keyword">long</span> cn; <span class="comment">//词频  </span></span><br><span class="line"> 		<span class="keyword">int</span> *point; <span class="comment">//huffman编码对应内节点的路径  </span></span><br><span class="line"> 		<span class="keyword">char</span> *word, *code, codelen;<span class="comment">//huffman编码  </span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>数组vocab存取词语信息，每次1000的量增加</p>
+<p>##函数介绍<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TrainModel()</span><br></pre></td></tr></table></figure></p>
 <p>读取每个词语，存入vacab，和vacab_hash中.</p>
 <p>从词表中读入信息:<br>读入代码:</p>
-<p>``</p>
-<pre><code>//我觉得此处有问题，为什么没有读入词频
-vocab[vocab_size].word = (char *)calloc(length, sizeof(char))
-strcpy(vocab[vocab_size].word, word); 
-vocab[vocab_size].cn = 0;
-vocab_size++; 
-</code></pre><p>``</p>
-<p>hash采用线性冲突法。顺序往下找:<br>``</p>
-<pre><code>hash = GetWordHash(word); 
-while (vocab_hash[hash] != -1) hash = (hash + 1) % vocab_hash_size;
-vocab_hash[hash] = vocab_size - 1;
-</code></pre><p>``</p>
-<p>其中hash值的获得很巧妙:<br>``</p>
-<pre><code>int GetWordHash(char *word) {  
-    unsigned long long a, hash = 0;
-    for (a = 0; a &lt; strlen(word); a++) hash = hash * 257 + word[a];
-    hash = hash % vocab_hash_size;
-    return hash;
-}
-</code></pre><p><code>读取词语结束后，</code>SortVocab``所有的词语排序，然后去掉出现次数小于min_count的词语，然后重新调整vacab_hash,同时开辟存储二叉树的节点，路径的排序</p>
-<p>从训练级中读取数据:<br>相同的思路但是需要在词语数目大的时候，删减词语集合<br>``</p>
-<pre><code>if (vocab_size &gt; vocab_hash_size * 0.7) ReduceVocab();
-//默认min_reduce=1
-void ReduceVocab() {
-      int a, b = 0;
-      unsigned int hash;
-      for (a = 0; a &lt; vocab_size; a++) if (vocab[a].cn &gt; min_reduce) {
-        vocab[b].cn = vocab[a].cn;
-        vocab[b].word = vocab[a].word;
-            b++;
-      } else free(vocab[a].word);
-      vocab_size = b;
-     for (a = 0; a &lt; vocab_hash_size; a++) vocab_hash[a] = -1; 
-      for (a = 0; a &lt; vocab_size; a++) {
-    // Hash will be re-computed, as it is not actual
-           hash = GetWordHash(vocab[a].word);
-            while (vocab_hash[hash] != -1) hash = (hash + 1) % vocab_hash_size;
-         vocab_hash[hash] = a;
-  }
-  fflush(stdout);
-  min_reduce++;
-}
-</code></pre><p>``</p>
-<p>huffuman树的建树很有意思:<br>``</p>
-<pre><code>//实际写一个6,5,4,3,2,1的过程就明白了
-void CreateBinaryTree() {
-    long long a, b, i, min1i, min2i, pos1, pos2, point[MAX_CODE_LENGTH];
-    char code[MAX_CODE_LENGTH];
-    long long *count = (long long *)calloc(vocab_size * 2 + 1, sizeof(long long));
-    long long *binary = (long long *)calloc(vocab_size * 2 + 1, sizeof(long long));
-    long long *parent_node = (long long *)calloc(vocab_size * 2 + 1, sizeof(long long));
-    for (a = 0; a &lt; vocab_size; a++) count[a] = vocab[a].cn;
-    for (a = vocab_size; a &lt; vocab_size * 2; a++) count[a] = 1e15;
-    pos1 = vocab_size - 1;
-    pos2 = vocab_size;
-    // Following algorithm constructs the Huffman tree by adding one node at a time
-    for (a = 0; a &lt; vocab_size - 1; a++) {
-        // First, find two smallest nodes &apos;min1, min2&apos;
-        if (pos1 &gt;= 0) {
-            if (count[pos1] &lt; count[pos2]) {
-                min1i = pos1;
-                pos1--;
-            } else {
-                min1i = pos2;
-                pos2++;
-            }
-       } else {
-           min1i = pos2;
-           pos2++;
-       }   
-       if (pos1 &gt;= 0) {
-           if (count[pos1] &lt; count[pos2]) {
-               min2i = pos1;
-               pos1--;
-          } else {
-              min2i = pos2;
-              pos2++;
-          }
-       } else {
-           min2i = pos2;
-           pos2++;
-       }      
-      count[vocab_size + a] = count[min1i] + count[min2i]; //min1,min2为每次组建树        
-                                                           //的叶子节点，其中min2i    
-                                                           //为较大的那一个叶子节点
-      parent_node[min1i] = vocab_size + a;  //存储父子关系
-      parent_node[min2i] = vocab_size + a;
-      binary[min2i] = 1;   //存储0，1作为路径
-   }
-   // Now assign binary code to each vocabulary word
-   //point太牛逼,point第一位一直为vocab_size-2,为树的根节点，在code中不存储根节点
-
-   for (a = 0; a &lt; vocab_size; a++) {
-     b = a;
-     i = 0;
-     while (1) {
-        code[i] = binary[b];
-        point[i] = b;
-        i++;
-        b = parent_node[b];
-        if (b == vocab_size * 2 - 2) break;
-     }
-     vocab[a].codelen = i;
-     vocab[a].point[0] = vocab_size - 2;
-     for (b = 0; b &lt; i; b++) {
-         vocab[a].code[i - b - 1] = code[b];   //顺序倒过来，从根节点下一层往下到叶子      
-                                               //节点
-         vocab[a].point[i - b] = point[b] - vocab_size; //meikandong
-     }
-  }
-  free(count);
-  free(binary);
-  free(parent_node);
-}
-</code></pre><p>``</p>
-<p>接下来是负抽样的初始化,根据词的个数生成概率数组<br>``</p>
-<pre><code>void InitUnigramTable() {
-      int a, i;
-      long long train_words_pow = 0;
-      real d1, power = 0.75;
-     table = (int *)malloc(table_size * sizeof(int));
-      for (a = 0; a &lt; vocab_size; a++) train_words_pow += pow(vocab[a].cn, power);
-      i = 0;
-      d1 = pow(vocab[i].cn, power) / (real)train_words_pow;
-      for (a = 0; a &lt; table_size; a++) {
-        table[a] = i;
-        if (a / (real)table_size &gt; d1) {
-              i++;
-              d1 += pow(vocab[i].cn, power) / (real)train_words_pow;
-        }
-       if (i &gt;= vocab_size) i = vocab_size - 1;
-      }
-}
-//生成table,[0,0,0,0,1,1,1,2]
-</code></pre><p>``</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   <span class="comment">//我觉得此处有问题，为什么没有读入词频</span></span><br><span class="line">vocab[vocab_size].word = (<span class="keyword">char</span> *)<span class="built_in">calloc</span>(length, <span class="keyword">sizeof</span>(<span class="keyword">char</span>))</span><br><span class="line"><span class="built_in">strcpy</span>(vocab[vocab_size].word, word); </span><br><span class="line">vocab[vocab_size].cn = <span class="number">0</span>;</span><br><span class="line">vocab_size++;</span><br></pre></td></tr></table></figure>
+<p>hash采用线性冲突法。顺序往下找:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">hash = GetWordHash(word); </span><br><span class="line"><span class="keyword">while</span> (vocab_hash[hash] != <span class="number">-1</span>) hash = (hash + <span class="number">1</span>) % vocab_hash_size;</span><br><span class="line">vocab_hash[hash] = vocab_size - <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>其中hash值的获得很巧妙:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">GetWordHash</span><span class="params">(<span class="keyword">char</span> *word)</span> </span>&#123;  </span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> a, hash = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; <span class="built_in">strlen</span>(word); a++) hash = hash * <span class="number">257</span> + word[a];</span><br><span class="line">	hash = hash % vocab_hash_size;</span><br><span class="line">	<span class="keyword">return</span> hash;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>读取词语结束后，<code>SortVocab</code>所有的词语排序，然后去掉出现次数小于min_count的词语，然后重新调整vacab_hash,同时开辟存储二叉树的节点，路径的排序</p>
+<p>从训练级中读取数据:<br>相同的思路但是需要在词语数目大的时候，删减词语集合</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (vocab_size &gt; vocab_hash_size * <span class="number">0.7</span>) ReduceVocab();</span><br><span class="line">   <span class="comment">//默认min_reduce=1</span></span><br><span class="line">   <span class="function"><span class="keyword">void</span> <span class="title">ReduceVocab</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 		<span class="keyword">int</span> a, b = <span class="number">0</span>;</span><br><span class="line"> 		<span class="keyword">unsigned</span> <span class="keyword">int</span> hash;</span><br><span class="line"> 		<span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; vocab_size; a++) <span class="keyword">if</span> (vocab[a].cn &gt; min_reduce) &#123;</span><br><span class="line">   		vocab[b].cn = vocab[a].cn;</span><br><span class="line">   		vocab[b].word = vocab[a].word;</span><br><span class="line">  			 b++;</span><br><span class="line"> 		&#125; <span class="keyword">else</span> <span class="built_in">free</span>(vocab[a].word);</span><br><span class="line"> 		vocab_size = b;</span><br><span class="line">		<span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; vocab_hash_size; a++) vocab_hash[a] = <span class="number">-1</span>; </span><br><span class="line"> 		<span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; vocab_size; a++) &#123;</span><br><span class="line">   	<span class="comment">// Hash will be re-computed, as it is not actual</span></span><br><span class="line">  			hash = GetWordHash(vocab[a].word);</span><br><span class="line">  		 	<span class="keyword">while</span> (vocab_hash[hash] != <span class="number">-1</span>) hash = (hash + <span class="number">1</span>) % vocab_hash_size;</span><br><span class="line">   	 	vocab_hash[hash] = a;</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	fflush(<span class="built_in">stdout</span>);</span><br><span class="line">	 min_reduce++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>huffuman树的建树很有意思:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   <span class="comment">//实际写一个6,5,4,3,2,1的过程就明白了</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CreateBinaryTree</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">long</span> <span class="keyword">long</span> a, b, i, min1i, min2i, pos1, pos2, point[MAX_CODE_LENGTH];</span><br><span class="line">       <span class="keyword">char</span> code[MAX_CODE_LENGTH];</span><br><span class="line">       <span class="keyword">long</span> <span class="keyword">long</span> *count = (<span class="keyword">long</span> <span class="keyword">long</span> *)<span class="built_in">calloc</span>(vocab_size * <span class="number">2</span> + <span class="number">1</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>));</span><br><span class="line">       <span class="keyword">long</span> <span class="keyword">long</span> *binary = (<span class="keyword">long</span> <span class="keyword">long</span> *)<span class="built_in">calloc</span>(vocab_size * <span class="number">2</span> + <span class="number">1</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>));</span><br><span class="line">       <span class="keyword">long</span> <span class="keyword">long</span> *parent_node = (<span class="keyword">long</span> <span class="keyword">long</span> *)<span class="built_in">calloc</span>(vocab_size * <span class="number">2</span> + <span class="number">1</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>));</span><br><span class="line">       <span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; vocab_size; a++) count[a] = vocab[a].cn;</span><br><span class="line">       <span class="keyword">for</span> (a = vocab_size; a &lt; vocab_size * <span class="number">2</span>; a++) count[a] = <span class="number">1e15</span>;</span><br><span class="line">       pos1 = vocab_size - <span class="number">1</span>;</span><br><span class="line">       pos2 = vocab_size;</span><br><span class="line">       <span class="comment">// Following algorithm constructs the Huffman tree by adding one node at a time</span></span><br><span class="line">       <span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; vocab_size - <span class="number">1</span>; a++) &#123;</span><br><span class="line">           <span class="comment">// First, find two smallest nodes 'min1, min2'</span></span><br><span class="line">           <span class="keyword">if</span> (pos1 &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">               <span class="keyword">if</span> (count[pos1] &lt; count[pos2]) &#123;</span><br><span class="line">                   min1i = pos1;</span><br><span class="line">                   pos1--;</span><br><span class="line">               &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                   min1i = pos2;</span><br><span class="line">                   pos2++;</span><br><span class="line">               &#125;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              min1i = pos2;</span><br><span class="line">              pos2++;</span><br><span class="line">          &#125;   </span><br><span class="line">          <span class="keyword">if</span> (pos1 &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">              <span class="keyword">if</span> (count[pos1] &lt; count[pos2]) &#123;</span><br><span class="line">                  min2i = pos1;</span><br><span class="line">                  pos1--;</span><br><span class="line">             &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                 min2i = pos2;</span><br><span class="line">                 pos2++;</span><br><span class="line">             &#125;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              min2i = pos2;</span><br><span class="line">              pos2++;</span><br><span class="line">          &#125;      </span><br><span class="line">         count[vocab_size + a] = count[min1i] + count[min2i]; <span class="comment">//min1,min2为每次组建树        </span></span><br><span class="line">                                                              <span class="comment">//的叶子节点，其中min2i    </span></span><br><span class="line">                                                              <span class="comment">//为较大的那一个叶子节点</span></span><br><span class="line">         parent_node[min1i] = vocab_size + a;  <span class="comment">//存储父子关系</span></span><br><span class="line">         parent_node[min2i] = vocab_size + a;</span><br><span class="line">         binary[min2i] = <span class="number">1</span>;   <span class="comment">//存储0，1作为路径</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// Now assign binary code to each vocabulary word</span></span><br><span class="line">      <span class="comment">//point太牛逼,point第一位一直为vocab_size-2,为树的根节点，在code中不存储根节点</span></span><br><span class="line">      </span><br><span class="line">      <span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; vocab_size; a++) &#123;</span><br><span class="line">        b = a;</span><br><span class="line">        i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">           code[i] = binary[b];</span><br><span class="line">           point[i] = b;</span><br><span class="line">           i++;</span><br><span class="line">           b = parent_node[b];</span><br><span class="line">           <span class="keyword">if</span> (b == vocab_size * <span class="number">2</span> - <span class="number">2</span>) <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        vocab[a].codelen = i;</span><br><span class="line">        vocab[a].point[<span class="number">0</span>] = vocab_size - <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span> (b = <span class="number">0</span>; b &lt; i; b++) &#123;</span><br><span class="line">            vocab[a].code[i - b - <span class="number">1</span>] = code[b];   <span class="comment">//顺序倒过来，从根节点下一层往下到叶子      </span></span><br><span class="line">                                                  <span class="comment">//节点</span></span><br><span class="line">            vocab[a].point[i - b] = point[b] - vocab_size; <span class="comment">//meikandong</span></span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="built_in">free</span>(count);</span><br><span class="line">     <span class="built_in">free</span>(binary);</span><br><span class="line">     <span class="built_in">free</span>(parent_node);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>接下来是负抽样的初始化,根据词的个数生成概率数组</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitUnigramTable</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> 		<span class="keyword">int</span> a, i;</span><br><span class="line"> 		<span class="keyword">long</span> <span class="keyword">long</span> train_words_pow = <span class="number">0</span>;</span><br><span class="line"> 		real d1, power = <span class="number">0.75</span>;</span><br><span class="line">		table = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(table_size * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"> 		<span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; vocab_size; a++) train_words_pow += <span class="built_in">pow</span>(vocab[a].cn, power);</span><br><span class="line"> 		i = <span class="number">0</span>;</span><br><span class="line"> 		d1 = <span class="built_in">pow</span>(vocab[i].cn, power) / (real)train_words_pow;</span><br><span class="line"> 		<span class="keyword">for</span> (a = <span class="number">0</span>; a &lt; table_size; a++) &#123;</span><br><span class="line">   		table[a] = i;</span><br><span class="line">   		<span class="keyword">if</span> (a / (real)table_size &gt; d1) &#123;</span><br><span class="line">    			 i++;</span><br><span class="line">    			 d1 += <span class="built_in">pow</span>(vocab[i].cn, power) / (real)train_words_pow;</span><br><span class="line">   		&#125;</span><br><span class="line">   	   <span class="keyword">if</span> (i &gt;= vocab_size) i = vocab_size - <span class="number">1</span>;</span><br><span class="line"> 		&#125;</span><br><span class="line">&#125;</span><br><span class="line">   <span class="comment">//生成table,[0,0,0,0,1,1,1,2]</span></span><br></pre></td></tr></table></figure>
 <p>训练<br>l1 ns中表示word在sys1neg中的起始位置，主要用来获取负样本的vector<br>l2 cbow表示syn1中的非叶子节点的位置,主要用来获取非叶子节点的vector<br>taget ns中当前词语<br>label ns中当前词语的label,<br>neu1  隐藏层的vector<br>nuu1e 误差累积项</p>
 <p>两个模型cbow和skip-<br>具体的推理过程可以看<a href="http://blog.csdn.net/itplus/article/details/37969979" title="csdn 基于hs的模型" target="_blank" rel="noopener">csdn 基于hs的模型</a><br>其中cbow的模型结构如如下文:</p>
 <p><img src="http://ashan2012.github.io/images/word2vector/cbow.png" alt="cbow结构图"></p>
 <p>cbow更新的伪代码如下:</p>
 <p><img src="http://ashan2012.github.io/images/word2vector/cbowliucheng.png" alt="cbow的更新伪码"></p>
 <p>看一下使用hs的cbow模型:</p>
-<pre><code>if (cbow) {  //train the cbow architecture
-  // in -&gt; hidden
-  cw = 0;
-  for (a = b; a &lt; window * 2 + 1 - b; a++) if (a != window) {   //context(w)输入上下文相加得到隐藏层
-    c = sentence_position - window + a;
-    if (c &lt; 0) continue;
-    if (c &gt;= sentence_length) continue;
-    last_word = sen[c];
-    if (last_word == -1) continue;
-    for (c = 0; c &lt; layer1_size; c++) neu1[c] += syn0[c + last_word * layer1_size];
-    cw++;
-  }   
-  if (cw) {
-    for (c = 0; c &lt; layer1_size; c++) neu1[c] /= cw;   //隐藏层的变量除以输入的变量个数
-    if (hs) for (d = 0; d &lt; vocab[word].codelen; d++) {
-      f = 0;
-      l2 = vocab[word].point[d] * layer1_size;  //非叶子节点的位置
-      // Propagate hidden -&gt; output
-      for (c = 0; c &lt; layer1_size; c++) f += neu1[c] * syn1[c + l2];   //逻辑函数的因变量,Xw*参数,即非叶子节点向量
-      if (f &lt;= -MAX_EXP) continue;
-      else if (f &gt;= MAX_EXP) continue;
-      else f = expTable[(int)((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))];  //分类的概率值
-      // &apos;g&apos; is the gradient multiplied by the learning rate
-      g = (1 - vocab[word].code[d] - f) * alpha;    
-      // Propagate errors output -&gt; hidden
-      for (c = 0; c &lt; layer1_size; c++) neu1e[c] += g * syn1[c + l2];  //误差累积项，用来更新词向量，上下文词的向量
-      // Learn weights hidden -&gt; output
-      for (c = 0; c &lt; layer1_size; c++) syn1[c + l2] += g * neu1[c];   //更新非叶子节点的向量，即参数向量
-    }   
-   //文中此处为负抽样的代码
-   //更新所有上下文词的词向量
-    // hidden -&gt; in
-    for (a = b; a &lt; window * 2 + 1 - b; a++) if (a != window) {
-      c = sentence_position - window + a;
-      if (c &lt; 0) continue;
-      if (c &gt;= sentence_length) continue;
-      last_word = sen[c];
-      if (last_word == -1) continue;
-      for (c = 0; c &lt; layer1_size; c++) syn0[c + last_word * layer1_size] += neu1e[c]; //这一步更新
-    }
-</code></pre><p>负抽样的代码如下:</p>
-<pre><code>  // NEGATIVE SAMPLING
-if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
-  if (d == 0) {
-    target = word;
-    label = 1;
-  } else {
-    next_random = next_random * (unsigned long long)25214903917 + 11; 
-    target = table[(next_random &gt;&gt; 16) % table_size];
-    if (target == 0) target = next_random % (vocab_size - 1) + 1;
-    if (target == word) continue;
-    label = 0;
-  }   
-  l2 = target * layer1_size;
-  f = 0;
-  for (c = 0; c &lt; layer1_size; c++) f += neu1[c] * syn1neg[c + l2];
-  if (f &gt; MAX_EXP) g = (label - 1) * alpha;
-  else if (f &lt; -MAX_EXP) g = (label - 0) * alpha;
-  else g = (label - expTable[(int)((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / 2))]) * alpha;
-  for (c = 0; c &lt; layer1_size; c++) neu1e[c] += g * syn1neg[c + l2];
-  for (c = 0; c &lt; layer1_size; c++) syn1neg[c + l2] += g * neu1[c];
-}   
-</code></pre><p>附录，推导过程：<br>负抽样方法模型推导见:<br><a href="http://blog.csdn.net/itplus/article/details/37998797" target="_blank" rel="noopener">word2vector中的负抽样</a><br>大致思路为条件为上下文，正确的词语概率大，随机负抽样的概率小</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line"><span class="keyword">if</span> (cbow) &#123;  <span class="comment">//train the cbow architecture</span></span><br><span class="line">     <span class="comment">// in -&gt; hidden</span></span><br><span class="line">     cw = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">for</span> (a = b; a &lt; window * <span class="number">2</span> + <span class="number">1</span> - b; a++) <span class="keyword">if</span> (a != window) &#123;   <span class="comment">//context(w)输入上下文相加得到隐藏层</span></span><br><span class="line">       c = sentence_position - window + a;</span><br><span class="line">       <span class="keyword">if</span> (c &lt; <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">       <span class="keyword">if</span> (c &gt;= sentence_length) <span class="keyword">continue</span>;</span><br><span class="line">       last_word = sen[c];</span><br><span class="line">       <span class="keyword">if</span> (last_word == <span class="number">-1</span>) <span class="keyword">continue</span>;</span><br><span class="line">       <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) neu1[c] += syn0[c + last_word * layer1_size];</span><br><span class="line">       cw++;</span><br><span class="line">     &#125;   </span><br><span class="line">     <span class="keyword">if</span> (cw) &#123;</span><br><span class="line">       <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) neu1[c] /= cw;   <span class="comment">//隐藏层的变量除以输入的变量个数</span></span><br><span class="line">       <span class="keyword">if</span> (hs) <span class="keyword">for</span> (d = <span class="number">0</span>; d &lt; vocab[word].codelen; d++) &#123;</span><br><span class="line">         f = <span class="number">0</span>;</span><br><span class="line">         l2 = vocab[word].point[d] * layer1_size;  <span class="comment">//非叶子节点的位置</span></span><br><span class="line">         <span class="comment">// Propagate hidden -&gt; output</span></span><br><span class="line">         <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) f += neu1[c] * syn1[c + l2];   <span class="comment">//逻辑函数的因变量,Xw*参数,即非叶子节点向量</span></span><br><span class="line">         <span class="keyword">if</span> (f &lt;= -MAX_EXP) <span class="keyword">continue</span>;</span><br><span class="line">         <span class="keyword">else</span> <span class="keyword">if</span> (f &gt;= MAX_EXP) <span class="keyword">continue</span>;</span><br><span class="line">         <span class="keyword">else</span> f = expTable[(<span class="keyword">int</span>)((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / <span class="number">2</span>))];  <span class="comment">//分类的概率值</span></span><br><span class="line">         <span class="comment">// 'g' is the gradient multiplied by the learning rate</span></span><br><span class="line">         g = (<span class="number">1</span> - vocab[word].code[d] - f) * alpha;    </span><br><span class="line">         <span class="comment">// Propagate errors output -&gt; hidden</span></span><br><span class="line">         <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) neu1e[c] += g * syn1[c + l2];  <span class="comment">//误差累积项，用来更新词向量，上下文词的向量</span></span><br><span class="line">         <span class="comment">// Learn weights hidden -&gt; output</span></span><br><span class="line">         <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) syn1[c + l2] += g * neu1[c];   <span class="comment">//更新非叶子节点的向量，即参数向量</span></span><br><span class="line">       &#125;   </span><br><span class="line">      <span class="comment">//文中此处为负抽样的代码</span></span><br><span class="line">      <span class="comment">//更新所有上下文词的词向量</span></span><br><span class="line">       <span class="comment">// hidden -&gt; in</span></span><br><span class="line">       <span class="keyword">for</span> (a = b; a &lt; window * <span class="number">2</span> + <span class="number">1</span> - b; a++) <span class="keyword">if</span> (a != window) &#123;</span><br><span class="line">         c = sentence_position - window + a;</span><br><span class="line">         <span class="keyword">if</span> (c &lt; <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">         <span class="keyword">if</span> (c &gt;= sentence_length) <span class="keyword">continue</span>;</span><br><span class="line">         last_word = sen[c];</span><br><span class="line">         <span class="keyword">if</span> (last_word == <span class="number">-1</span>) <span class="keyword">continue</span>;</span><br><span class="line">         <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) syn0[c + last_word * layer1_size] += neu1e[c]; <span class="comment">//这一步更新</span></span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>负抽样的代码如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">// NEGATIVE SAMPLING</span></span><br><span class="line"><span class="keyword">if</span> (negative &gt; <span class="number">0</span>) <span class="keyword">for</span> (d = <span class="number">0</span>; d &lt; negative + <span class="number">1</span>; d++) &#123;</span><br><span class="line">  <span class="keyword">if</span> (d == <span class="number">0</span>) &#123;</span><br><span class="line">    target = word;</span><br><span class="line">    label = <span class="number">1</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    next_random = next_random * (<span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span>)<span class="number">25214903917</span> + <span class="number">11</span>; </span><br><span class="line">    target = table[(next_random &gt;&gt; <span class="number">16</span>) % table_size];</span><br><span class="line">    <span class="keyword">if</span> (target == <span class="number">0</span>) target = next_random % (vocab_size - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (target == word) <span class="keyword">continue</span>;</span><br><span class="line">    label = <span class="number">0</span>;</span><br><span class="line">  &#125;   </span><br><span class="line">  l2 = target * layer1_size;</span><br><span class="line">  f = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) f += neu1[c] * syn1neg[c + l2];</span><br><span class="line">  <span class="keyword">if</span> (f &gt; MAX_EXP) g = (label - <span class="number">1</span>) * alpha;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> (f &lt; -MAX_EXP) g = (label - <span class="number">0</span>) * alpha;</span><br><span class="line">  <span class="keyword">else</span> g = (label - expTable[(<span class="keyword">int</span>)((f + MAX_EXP) * (EXP_TABLE_SIZE / MAX_EXP / <span class="number">2</span>))]) * alpha;</span><br><span class="line">  <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) neu1e[c] += g * syn1neg[c + l2];</span><br><span class="line">  <span class="keyword">for</span> (c = <span class="number">0</span>; c &lt; layer1_size; c++) syn1neg[c + l2] += g * neu1[c];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>附录，推导过程：<br>负抽样方法模型推导见:<br><a href="http://blog.csdn.net/itplus/article/details/37998797" target="_blank" rel="noopener">word2vector中的负抽样</a><br>大致思路为条件为上下文，正确的词语概率大，随机负抽样的概率小</p>
 <p><img src="http://ashan2012.github.io/images/word2vector/negtive1.png" alt=""></p>
 <p><img src="http://ashan2012.github.io/images/word2vector/negtive2.png" alt=""></p>
 <p><img src="http://ashan2012.github.io/images/word2vector/negtive3.png" alt=""></p>
@@ -657,7 +463,19 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
       
         <div class="post-tags">
           
-            <a href="/tags/word2vector-wordtovector-词向量-源码-源代码-负抽样-cbow/" rel="tag"># word2vector wordtovector 词向量 源码 源代码 负抽样 cbow</a>
+            <a href="/tags/源码/" rel="tag"># 源码</a>
+          
+            <a href="/tags/源代码/" rel="tag"># 源代码</a>
+          
+            <a href="/tags/word2vector/" rel="tag"># word2vector</a>
+          
+            <a href="/tags/wordtovector/" rel="tag"># wordtovector</a>
+          
+            <a href="/tags/词向量/" rel="tag"># 词向量</a>
+          
+            <a href="/tags/负抽样/" rel="tag"># 负抽样</a>
+          
+            <a href="/tags/cbow/" rel="tag"># cbow</a>
           
         </div>
       
@@ -772,7 +590,7 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -849,7 +667,7 @@ if (negative &gt; 0) for (d = 0; d &lt; negative + 1; d++) {
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共11.7k字</span>
+  <span class="post-count">博客全站共11.9k字</span>
 </div>
 
         
