@@ -7,7 +7,7 @@
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
@@ -130,7 +130,7 @@
 
 
 
-  <title>数据挖掘系列之特征工程 | Ashan Blog</title>
+  <title>数据挖掘系列之特征工程 | Ashan Blog</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -149,7 +149,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -371,7 +371,7 @@
 <p>数据采样过滤之后，就是根据数据得到特征，这个取决于自己定的特征。然后就需要对特征进行处理：</p>
 <p>对于多种特征中单个特征的处理，需要经过这么几步中的一步或者几步：</p>
 <ul>
-<li>归一化：由于不同的特征有不同的取值范围，由于模型一般会偏向于取值范围较大的特征，为了纠正这种由于取值范围不一致导致的偏向，需要对特征做归一化。一般都是将不同取值范围的数字映射到[0,1]空间，常用的方法包括最大最小归一化，$$\frac{x-x<em>{min}}{x</em>{max}-x_{min}}$$libsvm用了这种方法做scale。还有就是排序归一化，所有值按顺序排序，赋予新值</li>
+<li>归一化：由于不同的特征有不同的取值范围，由于模型一般会偏向于取值范围较大的特征，为了纠正这种由于取值范围不一致导致的偏向，需要对特征做归一化。一般都是将不同取值范围的数字映射到[0,1]空间，常用的方法包括最大最小归一化，$$\frac{x-x_{min}}{x_{max}-x_{min}}$$libsvm用了这种方法做scale。还有就是排序归一化，所有值按顺序排序，赋予新值</li>
 <li>离散化。许多特征的取值范围都是无穷的，有时候为了便于在模型中处理，需要将连续的值转化为离散值。常用方法为等值划分或者等量划分。等值划分字面意思就是按照一定固定的数值将取值范围分为一个个区间，然后取落在区间内部的数值的中位数或者中间值。等量划分主要是考虑数据分布不均匀的情况，按照数值数据划分，一般也是取数值中位数或者均值。</li>
 <li>缩放：缩放和归一化作用一样，只不过缩放不一定缩放到0-1。缩放也可以采用最大最小方法，也可以用z-score(标准分数）:$${\frac{x-\mu}{\sigma}}$$,$$\mu$$为特征的均值，$$\sigma$$为特征的方差，这个方法也可以作为异常点检测，一般认为z-score&gt;3的时候点为异常点。</li>
 <li>截断。截断是指一个某个分类的特征太多肯定会影响分类的效果，所以对于一个分类，可能会做的是对所有的特征进行排序，然后对特征序列截断，只取特征序列的前几位。</li>
@@ -564,7 +564,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -755,7 +755,7 @@
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 
