@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://ashan2012.github.info/"/>
-  <updated>2017-12-18T01:04:10.000Z</updated>
+  <updated>2018-01-11T09:30:07.000Z</updated>
   <id>http://ashan2012.github.info/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>论文阅读 Personal Recommendation Using Deep Recurrent Neural Networks in NetEase</title>
+    <link href="http://ashan2012.github.info/2017/12/24//blog/2017/12/24/paper_read_personal_rec_with_drnn.html/"/>
+    <id>http://ashan2012.github.info/2017/12/24//blog/2017/12/24/paper_read_personal_rec_with_drnn.html/</id>
+    <published>2017-12-23T16:00:00.000Z</published>
+    <updated>2018-01-11T09:30:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="摘要说明"><a href="#摘要说明" class="headerlink" title="摘要说明"></a>摘要说明</h3><p><em>网易考拉推荐系统中Deep RNN的应用，不过词表比较小，session作为训练序列，更新比较快，主要使用RNN去捕获用户近实时的动态特征</em></p><h3 id="创新点"><a href="#创新点" class="headerlink" title="创新点"></a>创新点</h3><p>1、动态更新的系统，捕获用户动态特征<br>2、作为对比方案cf，优势为可以获得用户浏览历史的一些顺序特性<br>3、结合FNN整体推荐，准确率有一定的提升</p><h3 id="具体方案"><a href="#具体方案" class="headerlink" title="具体方案"></a>具体方案</h3><h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;摘要说明&quot;&gt;&lt;a href=&quot;#摘要说明&quot; class=&quot;headerlink&quot; title=&quot;摘要说明&quot;&gt;&lt;/a&gt;摘要说明&lt;/h3&gt;&lt;p&gt;&lt;em&gt;网易考拉推荐系统中Deep RNN的应用，不过词表比较小，session作为训练序列，更新比较快，主要使用RNN去捕
+      
+    
+    </summary>
+    
+      <category term="论文阅读" scheme="http://ashan2012.github.info/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/"/>
+    
+    
+      <category term="推荐系统" scheme="http://ashan2012.github.info/tags/%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="rnn" scheme="http://ashan2012.github.info/tags/rnn/"/>
+    
+      <category term="循环神经网络" scheme="http://ashan2012.github.info/tags/%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
   
   <entry>
     <title>论文阅读：Collaborative Filtering Recommendation on Users’ Interest Sequences</title>
