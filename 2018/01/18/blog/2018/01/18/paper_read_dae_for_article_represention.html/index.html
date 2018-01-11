@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="推荐系统,embeding,dae," />
+  <meta name="keywords" content="推荐系统,embeding,dae,文章去重，文本相似性," />
 
 
 
@@ -82,7 +82,7 @@
 
 
 <meta name="description" content="摘要说明雅虎日本新闻团队关于使用DAE(denoising auto-encoder)来做文章去重。背景为在新闻推荐中，多样性作为推荐系统一个重要评价指标，通常算法容易将相似的文章排在相近的地方(尤其是热点事件会有多个报道的情况)，使用户产生阅读疲劳(阅读信息下降，在线时间下降)，文章去重必不可少。向量化表示可以通过內积计算相似度，计算简单，利于线上部署 创新点dae通过类型有监督训练，效果变好">
-<meta name="keywords" content="推荐系统,embeding,dae">
+<meta name="keywords" content="推荐系统,embeding,dae,文章去重，文本相似性">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文阅读：Article De-duplication Using Distributed Representations">
 <meta property="og:url" content="http://ashan2012.github.info/2018/01/18//blog/2018/01/18/paper_read_dae_for_article_represention.html/index.html">
@@ -94,7 +94,7 @@
 <meta property="og:image" content="http://ashan2012.github.io/images/paper_read_dae_for_article_represention/3.png">
 <meta property="og:image" content="http://ashan2012.github.io/images/paper_read_dae_for_article_represention/4.png">
 <meta property="og:image" content="http://ashan2012.github.io/images/paper_read_dae_for_article_represention/5.png">
-<meta property="og:updated_time" content="2018-01-11T10:11:46.000Z">
+<meta property="og:updated_time" content="2018-01-11T10:14:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="论文阅读：Article De-duplication Using Distributed Representations">
 <meta name="twitter:description" content="摘要说明雅虎日本新闻团队关于使用DAE(denoising auto-encoder)来做文章去重。背景为在新闻推荐中，多样性作为推荐系统一个重要评价指标，通常算法容易将相似的文章排在相近的地方(尤其是热点事件会有多个报道的情况)，使用户产生阅读疲劳(阅读信息下降，在线时间下降)，文章去重必不可少。向量化表示可以通过內积计算相似度，计算简单，利于线上部署 创新点dae通过类型有监督训练，效果变好">
@@ -352,7 +352,10 @@
 <p>线上a/b测试<br>测试指标:CTR (#clicks/#imps), depth (#imps/#sessions) and module CTR (#clicks/#sessions)<br>结果如下:<br><img src="http://ashan2012.github.io/images/paper_read_dae_for_article_represention/5.png" alt="有监督的dae"></p>
 <p>提升比较明显，depth明显增加，点击率增加，证明了推荐更加多样性，吸引了用户的兴趣</p>
 <h3 id="参数设置"><a href="#参数设置" class="headerlink" title="参数设置"></a>参数设置</h3><p>训练文本为400K文本(2015年3月)，词频排序前10万，去掉停用词。然后中间表示向量为 500维，输入向量为10万维，值为0,1.</p>
-<h3 id="其他解决方案对比"><a href="#其他解决方案对比" class="headerlink" title="其他解决方案对比"></a>其他解决方案对比</h3><h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3>
+<h3 id="其他解决方案对比"><a href="#其他解决方案对比" class="headerlink" title="其他解决方案对比"></a>其他解决方案对比</h3><h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>[1] Q. Le and T. Mikolov. Distributed representations of<br>sentences and documents. In ICML, 2014.</p>
+<p>[2] P. Li and C. König. b-bit minwise hashing. In WWW,<br>2010.</p>
+<p>[3] P. Vincent, H. Larochelle, Y. Bengio, and P.-A.<br>Manzagol. Extracting and composing robust features<br>with denoising autoencoders. In ICML, 2008</p>
+
       
     </div>
     
@@ -386,6 +389,8 @@
             <a href="/tags/embeding/" rel="tag"># embeding</a>
           
             <a href="/tags/dae/" rel="tag"># dae</a>
+          
+            <a href="/tags/文章去重，文本相似性/" rel="tag"># 文章去重，文本相似性</a>
           
         </div>
       
@@ -505,7 +510,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
