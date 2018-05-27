@@ -93,7 +93,11 @@
 <meta property="og:image" content="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/2.png">
 <meta property="og:image" content="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/3.png">
 <meta property="og:image" content="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/4.png">
-<meta property="og:updated_time" content="2018-01-28T14:08:53.000Z">
+<meta property="og:image" content="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/5.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/6.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/7.png">
+<meta property="og:image" content="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/8.png">
+<meta property="og:updated_time" content="2018-01-30T06:09:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="论文阅读：Embedding-based News Recommendation for Millions of Users">
 <meta name="twitter:description" content="摘要说明雅虎日本新闻团队发表于KDD17的一篇关于新闻推荐的文章。通过之前的自编码器表示文章，通过用户的浏览历史构造训练集，使用rnn训练用户的向量表示，通过用户向量和文章的向量內积排序，作为推荐的list 创新点rnn训练用户的向量表示，和文章向量表示的內积作为推荐依据，对于实时系统来说，性能能很好的满足要求，根据用户浏览历史训练RNN算法，很好的表示了用户的兴趣变化 具体方案首先：新闻推荐的三">
@@ -358,6 +362,7 @@
 <p>然后定义P+为session中用户点击的article，P-为session中用户没有点击的文章。定义Ut为用户u在t时刻的状态，则系统需要解决的问题为:<br><img src="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/2.png" alt="系统满足"></p>
 <p>其中F表示生成用户表示方程，R表示用户和文章相关度的表示.则我们的目标为：<br><img src="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/3.png" alt="目标函数"></p>
 <p>其中考虑到系统的实时性，R函数为內积，考虑到排序上文章的位置关系，加入位置纠正B函数，新的目标函数为：<br><img src="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/4.png" alt="新目标函数"></p>
+<p>目标函数中u通过用户的浏览记录通过RNN去学习，学习的函数表示为:<br><img src="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/5.png" alt="RNN结构"><br>文章中介绍实验了三种结构取学习，分别为：<br>1、标准的RNN<br><img src="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/6.png" alt="RNN结构"><br>2、LSTM<br><img src="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/7.png" alt="LSTM结构"><br>3、GRU<br><img src="http://ashan2012.github.io/images/paper_read_Embedding_base_news_recommendation/8.png" alt="GRU结构"></p>
 <h3 id="验证方式"><a href="#验证方式" class="headerlink" title="验证方式:"></a>验证方式:</h3><h3 id="参数设置"><a href="#参数设置" class="headerlink" title="参数设置"></a>参数设置</h3><h3 id="其他解决方案对比"><a href="#其他解决方案对比" class="headerlink" title="其他解决方案对比"></a>其他解决方案对比</h3><h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3>
       
     </div>
@@ -415,6 +420,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/18/blog/2018/03/18/book_note_tensorflow_实战.html/" rel="prev" title="读书笔记：tensorflow实战基础篇">
+                读书笔记：tensorflow实战基础篇 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -491,7 +500,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -502,7 +511,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -513,7 +522,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -606,7 +615,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共13.5k字</span>
+  <span class="post-count">博客全站共15.8k字</span>
 </div>
 
         
